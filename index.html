@@ -244,6 +244,21 @@
   .note-box { background:var(--card-2); border:1px solid var(--line); border-radius:14px; padding:14px 16px; font-size:13.5px; color:var(--muted); }
   .note-box b { color:var(--text); }
 
+  /* BUBBLE / SIGNALS */
+  .sig { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .sig h4 { margin:0 0 4px; font-size:18px; display:flex; gap:9px; align-items:center; letter-spacing:-.3px; }
+  .sig .sub { color:var(--muted); font-size:14px; margin:0 0 12px; }
+  .sig .vs { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 14px; font-size:12.5px; font-weight:700; }
+  .sig .vs span { padding:5px 11px; border-radius:999px; }
+  .sig .vs .ok { background:rgba(45,212,167,.14); color:var(--green); }
+  .sig .vs .bad { background:rgba(255,107,107,.14); color:var(--red); }
+  .chart-box { background:#0e1424; border:1px solid var(--line); border-radius:12px; padding:8px; overflow:hidden; }
+  .chart-box.light { background:#ffffff; }
+  .chart-box img { width:100%; height:auto; display:block; border-radius:6px; }
+  .chart-cap { font-size:12px; color:var(--muted); margin-top:9px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .chart-cap a { color:#9cb8ff; font-weight:600; text-decoration:none; white-space:nowrap; }
+  .chart-cap a:hover { text-decoration:underline; }
+
   /* footer */
   footer { border-top:1px solid var(--line); padding:34px 0 60px; color:var(--muted); font-size:13.5px; }
   .disclaim { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13.5px; color:var(--muted); }
@@ -286,6 +301,7 @@
       <a href="#whyus">왜 미장?</a>
       <a href="#withdraw">인출계산기</a>
       <a href="#mastertips">고수비기</a>
+      <a href="#bubble">버블방어</a>
     </div>
   </div>
 </nav>
@@ -896,6 +912,124 @@
     </div>
     <div class="note-box" style="margin-top:16px">
       ⚠️ 세법·건강보험 기준과 한도는 매년 바뀝니다. 실행 전 본인 소득·자산 상황을 <b>세무사·금융 전문가</b>와 확인하세요.
+    </div>
+  </div>
+</section>
+
+<!-- BUBBLE DEFENSE -->
+<section id="bubble">
+  <div class="wrap">
+    <div class="eyebrow">Risk · 2026</div>
+    <h2 class="sec">📉 버블·하락장 방어 (리스크 관리)</h2>
+    <p class="sec-sub">요즘 'AI 버블' 경고가 많죠. <b style="color:var(--text)">지금이 위험한지 신호를 바로 보고</b>, 경보가 켜지면 절세계좌 안에서 어떻게 방어할지 정리했습니다. <b style="color:var(--gold)">※ 시장 예측이 아니라 '확률을 관리'하는 리스크 관리입니다 — 신호가 켜졌다고 폭락이 확정은 아닙니다.</b></p>
+
+    <h3 style="font-size:20px; margin:8px 0 14px; letter-spacing:-.3px;">① 지금이 위험한가 — 닷컴(2000) vs 지금(AI·2026)</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>구분</th><th>2000 닷컴 버블</th><th>지금 (AI·2026)</th></tr></thead>
+        <tbody>
+          <tr><td><b>주도주 실적</b></td><td>적자·'클릭 수'로 밸류</td><td>막대한 순이익·잉여현금 창출</td></tr>
+          <tr><td><b>투자 재원</b></td><td>차입(VC·부채) 의존</td><td><b>자기자본</b>(번 돈) · capex/FCF&lt;1 (2000년 ~4배)</td></tr>
+          <tr><td><b>밸류에이션</b></td><td>PER 100배+ 수두룩 / 측정불가</td><td>대형주 PER 30~50배(이익성장 일부 정당화)</td></tr>
+          <tr><td><b>쏠림</b></td><td>소수 기술주가 지수 견인</td><td>소수 AI·반도체 쏠림 (유사 ⚠️)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box" style="margin-top:14px">
+      📌 외형 과열은 닮았지만 <b>기초체력은 2000년보다 강합니다</b> → '시스템 전체 붕괴'보단 <b>'섹터별 강한 조정'</b> 리스크. <b>진짜 뇌관은 AI 투자 회수(ROI)</b>: 수백조 capex를 SW·서비스 매출로 못 거두면 반도체→데이터센터→전력→원자재까지 도미노 조정. (MIT 조사: 기업 95%가 생성형 AI에서 ROI 0.) 게다가 <b>스페이스X·오픈AI·앤트로픽 IPO가 시중 유동성 $2,000억+를 흡수</b>하면, 실적 없이 '테마'로 오른 주변부부터 유동성이 마릅니다.
+    </div>
+
+    <h3 style="font-size:20px; margin:30px 0 6px; letter-spacing:-.3px;">② 🚨 버블 경보 3대 신호 (라이브)</h3>
+    <p class="sec-sub" style="margin-bottom:18px">붕괴는 주가보다 <b style="color:var(--text)">'자금의 흐름'과 '신용시장'</b>에서 먼저 균열을 보입니다. 아래 차트로 직접 확인하세요.</p>
+
+    <div class="sig">
+      <h4>1️⃣ 하이일드 신용 스프레드</h4>
+      <p class="sub">투기등급 회사채와 국채의 금리차. 가장 먼저 경고하는 곳은 주식이 아니라 <b>채권</b>입니다. capex가 큰 인프라·실적 없는 기업부터 자금경색의 첫 도미노가 됩니다.</p>
+      <div class="vs"><span class="ok">정상 ▸ 축소·안정</span><span class="bad">위험 ▸ 바닥에서 V자 급등(자금경색)</span></div>
+      <div class="chart-box light">
+        <img loading="lazy" alt="ICE BofA US High Yield 스프레드 (FRED 라이브)" src="https://fred.stlouisfed.org/graph/fredgraph.png?id=BAMLH0A0HYM2&cosd=2018-01-01&width=1200&height=420" />
+      </div>
+      <div class="chart-cap"><span>출처: FRED · ICE BofA US High Yield OAS (매일 자동 갱신)</span><a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">인터랙티브 차트 →</a></div>
+    </div>
+
+    <div class="sig">
+      <h4>2️⃣ 금·은 — 안전자산 쏠림</h4>
+      <p class="sub">주도주가 고점에서 거래량만 터지며 횡보하는데 <b>금·은이 발작적으로 급등</b>하면, 기관이 조용히 주식에서 귀금속으로 피신 중이라는 해석이 가능합니다(여러 원인 중 하나).</p>
+      <div class="vs"><span class="ok">정상 ▸ 주식 상승·귀금속 완만</span><span class="bad">위험 ▸ 주도주 정체 + 금·은 폭등</span></div>
+      <div class="chart-box">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+          {"symbol":"TVC:GOLD","interval":"W","width":"100%","height":340,"locale":"kr","colorTheme":"dark","style":"3","hide_side_toolbar":true,"allow_symbol_change":false,"save_image":false,"backgroundColor":"#0e1424"}
+          </script>
+        </div>
+      </div>
+      <div class="chart-cap"><span>금(Gold) 주봉 · TradingView 실시간</span><a href="https://www.tradingview.com/symbols/TVC-SILVER/" target="_blank" rel="noopener">은(Silver) 차트 →</a></div>
+    </div>
+
+    <div class="sig">
+      <h4>3️⃣ 핵심 경영진(내부자) 대규모 매도</h4>
+      <p class="sub">회사의 실제 ROI를 가장 잘 아는 창업자·CEO가, 장밋빛 발표 뒤에서 지분을 대량 매도하면 '꼭지'의 전형적 인간 지표입니다. 내부자 <b>매수 대비 매도 비율이 역사적 고점</b>이면 경계.</p>
+      <div class="vs"><span class="ok">정상 ▸ 지분 유지·자사주 매입</span><span class="bad">위험 ▸ 경영진의 공격적 대량 매도</span></div>
+      <div class="note-box" style="margin-top:4px">
+        ⚠️ 이 지표는 무료로 <b>임베드할 수 있는 라이브 차트가 없어</b> 실시간 데이터로 직접 확인합니다 —
+        <a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" style="color:#9cb8ff;font-weight:600">OpenInsider 집중매도 →</a> ·
+        <a href="https://finviz.com/insidertrading.ashx?tc=2" target="_blank" rel="noopener" style="color:#9cb8ff;font-weight:600">Finviz 내부자 매도 →</a>
+      </div>
+    </div>
+
+    <h3 style="font-size:20px; margin:30px 0 14px; letter-spacing:-.3px;">③ 🛡️ 절세계좌 방어 리밸런싱</h3>
+    <p class="sec-sub" style="margin-bottom:16px">신호가 켜지면 <b style="color:var(--text)">절세계좌 안에서 갈아타는 게 핵심</b>입니다 — 매도해도 세금이 즉시 발생하지 않아 마음 편히 리밸런싱할 수 있으니까요.</p>
+
+    <div class="note-box" style="margin-bottom:16px; border-color:rgba(124,92,255,.4)">
+      🔄 <b>방어 모드 자산배분 예시</b> &nbsp;·&nbsp; 공격형 <b>[성장 80 / 현금 20]</b> → 하락 징후 포착 시 <b style="color:var(--gold)">[성장 30 · 버퍼/저변동 30 · 배당/커버드콜 20 · 파킹 20]</b>으로 전환. 목표 = 최대낙폭(MDD) 최소화 + 다음 사이클 '바겐세일' 실탄 확보.
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>계좌</th><th>방어 핵심</th><th>국내 상장 ETF 예시</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>IRP</b></td>
+            <td>안전자산 30% = 파킹·금</td>
+            <td>KODEX KOFR금리액티브 · TIGER CD금리투자KIS(현금성) · <b>ACE KRX금현물</b>(IRP 허용)</td>
+          </tr>
+          <tr>
+            <td><b>연금저축펀드</b></td>
+            <td>100% 위험자산 가능 → 배당+금</td>
+            <td>TIGER/ACE 미국배당다우존스(SCHD형) · ACE KRX금현물 · 미국S&amp;P500 저변동성</td>
+          </tr>
+          <tr>
+            <td><b>ISA</b></td>
+            <td>비과세로 배당 재투자(복리)</td>
+            <td>TIGER 미국배당다우존스 · 커버드콜형(고분배)</td>
+          </tr>
+          <tr>
+            <td><b>일반계좌</b></td>
+            <td>현금 대기·헷지</td>
+            <td>SGOV·BIL(美 초단기국채) · 금/은 · (헷지용 인버스는 소액·단기만)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="chart-cap" style="margin-top:8px"><span>※ 은선물 ETF는 퇴직연금에서 제한될 수 있어 연금·IRP에선 <b style="color:var(--text)">금현물(ACE KRX금현물)</b> 위주로. 버퍼/커버드콜 구체 종목은 라인업이 자주 바뀌니 매수 전 확인하세요.</span></p>
+
+    <div class="grid" style="margin-top:18px">
+      <div class="card">
+        <span class="tag o">리스크 관리 ①</span>
+        <h3><span class="ico">🚫</span> 인버스의 함정</h3>
+        <p>곱버스(2X)·인버스는 <b>장기 보유 시 음의 복리</b>로 횡보만 해도 녹습니다. <b>전체 자산의 5~10% 이내, 수 주 단기 헷지</b> 용도로만.</p>
+      </div>
+      <div class="card">
+        <span class="tag g">리스크 관리 ②</span>
+        <h3><span class="ico">💵</span> 현금의 가치 재정의</h3>
+        <p>하락장 진입기의 현금은 '쉬는 돈'이 아니라 <b>가장 확실한 +수익 자산</b>. 파킹형/단기국채에 <b>20~30%</b>를 묶어두면 바닥에서 주도주를 헐값에 담을 실탄이 됩니다.</p>
+      </div>
+      <div class="card">
+        <span class="tag b">리스크 관리 ③</span>
+        <h3><span class="ico">📉</span> 트레일링 스탑</h3>
+        <p>고PER 성장주가 <b>고점 대비 −15~20%</b>면 기계적으로 비중 축소. "혁신주니까 오르겠지"라는 희망회로는 금물 — 닷컴 때 <b>시스코도 −80%</b> 폭락했습니다.</p>
+      </div>
     </div>
   </div>
 </section>
