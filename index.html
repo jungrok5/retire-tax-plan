@@ -244,6 +244,14 @@
   .note-box { background:var(--card-2); border:1px solid var(--line); border-radius:14px; padding:14px 16px; font-size:13.5px; color:var(--muted); }
   .note-box b { color:var(--text); }
 
+  /* PHASE DIVIDERS */
+  .phase { border-top:1px solid var(--line); margin-top:26px; }
+  .phase .wrap { display:flex; align-items:center; gap:16px; padding-top:30px; }
+  .phase .pe { font-size:30px; line-height:1; flex:none; }
+  .phase .pt { font-size:clamp(20px,3.2vw,27px); font-weight:850; margin:0; letter-spacing:-.5px; }
+  .phase .pt small { color:var(--muted); font-weight:600; font-size:.58em; }
+  .phase .ps { margin:3px 0 0; color:var(--muted); font-size:14px; }
+
   /* BUBBLE / SIGNALS */
   .sig { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); margin-bottom:16px; }
   .sig h4 { margin:0 0 4px; font-size:18px; display:flex; gap:9px; align-items:center; letter-spacing:-.3px; }
@@ -289,16 +297,16 @@
     </button>
     <div class="links" id="navLinks">
       <a href="#overview">한눈에</a>
-      <a href="#simulator">배분계산기</a>
       <a href="#day0">0단계</a>
       <a href="#waterfall">폭포수</a>
+      <a href="#simulator">배분계산기</a>
+      <a href="#whyus">왜 미장?</a>
       <a href="#dcpension">퇴직연금</a>
+      <a href="#portfolio">포트폴리오</a>
+      <a href="#skills">절세기술</a>
       <a href="#byage">나이별</a>
       <a href="#bymoney">투자금별</a>
       <a href="#timeline">시간흐름</a>
-      <a href="#skills">절세기술</a>
-      <a href="#portfolio">포트폴리오</a>
-      <a href="#whyus">왜 미장?</a>
       <a href="#withdraw">인출계산기</a>
       <a href="#mastertips">고수비기</a>
       <a href="#bubble">버블방어</a>
@@ -349,11 +357,89 @@
         <span class="tag g">은퇴 수확기</span>
         <p>'소득의 꼬리표'를 바꿔치기하며 <b>초저율(3.3~5.5%)</b>로 빼 씁니다.</p>
       </div>
+      <div class="card">
+        <h3><span class="ico">🛡️</span> 버블 방어</h3>
+        <span class="tag o">하락장 대비</span>
+        <p>버블 신호(하이일드·금·내부자)를 보고 위기 땐 절세계좌에서 <b>방어 리밸런싱</b>.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- SIMULATOR -->
+<div class="phase"><div class="wrap"><span class="pe">🟢</span><div><h2 class="pt">모으기 <small>· 축적기</small></h2><p class="ps">세금 혜택이 큰 계좌부터 채워 자산을 불리는 단계.</p></div></div></div>
+
+<section id="day0">
+  <div class="wrap">
+    <div class="eyebrow">Step 0</div>
+    <h2 class="sec">⏰ 0단계 · 가장 먼저 "시간 시계" 작동시키기</h2>
+    <p class="sec-sub">은퇴 자산 세팅은 <b style="color:var(--text)">'시간'을 선점</b>하는 것이 절반입니다. 오늘 당장 할 수 있고, 비용은 1만 원입니다.</p>
+    <div class="steps-mini">
+      <div class="smini"><div class="n"></div><p><b>1만 원 최초 입금</b> — 오늘 당장 스마트폰 앱으로 <b>연금저축 또는 IRP</b> 계좌를 개설하고 단돈 1만 원을 입금합니다.</p></div>
+      <div class="smini"><div class="n"></div><p><b>휴면 계좌 방지</b> — 1,000원도 가능하지만 잔고가 너무 적으면 장기 미사용 휴면 계좌로 잠길 수 있어, 안전하게 1만 원을 넣어둡니다.</p></div>
+      <div class="smini"><div class="n"></div><p><b>5년 타이머 작동</b> — 연금을 3.3~5.5% 저율과세로 빼 쓰려면 '가입 후 5년'이 필요한데, 이 타이머는 <b>첫 입금일부터</b> 째깍째깍 돌아갑니다.</p></div>
+      <div class="smini"><div class="n"></div><p><b>프리패스 혜택</b> — 5년이 지난 뒤 ISA에서 굴리던 목돈 1억 원을 연금계좌로 옮기면, 국세청은 방금 들어온 1억 원도 <b>'5년 조건을 채운 돈'</b>으로 인정합니다.</p></div>
+    </div>
+    <div class="why" style="margin-top:16px">
+      <div class="t">💡 왜 1만 원인가?</div>
+      세법상 연금 저율과세 요건은 <b style="color:var(--text)">①가입 후 5년 경과 + ②만 55세 이상</b>입니다. 5년 요건은 미래에 큰돈을 넣어도 소급 적용되지 않으므로, '가입일'이라는 출발선을 오늘 끊어두는 것이 핵심입니다. 이미 <b style="color:var(--text)">55세 이상</b>이라면 5년이 지난 뒤 목돈을 넣은 그 달부터 바로 매월 저율 연금으로 수령할 수 있습니다.
+    </div>
+  </div>
+</section>
+
+<section id="waterfall">
+  <div class="wrap">
+    <div class="eyebrow">Step 1</div>
+    <h2 class="sec">🪣 1단계 · 폭포수 계좌 채우기 + 투자 종목 매칭</h2>
+    <p class="sec-sub">투자 가능 금액이 적을 때부터 많아질 때까지, 물통을 순서대로 채워 내려가는 원리입니다.</p>
+    <div class="waterfall">
+      <div class="wf-step wf-1">
+        <div class="wf-head">
+          <span class="wf-rank">1순위</span>
+          <h3>연금저축 + IRP</h3>
+          <span class="wf-amt">1인당 연 900만 원까지</span>
+        </div>
+        <div class="wf-body">
+          연금저축·IRP에 <b>1인당 최대 900만 원</b>까지 먼저 납입해 매년 세액공제를 챙깁니다. 맞벌이 부부가 각자 900만 원씩 꽉 채우면
+          <b>부부 합산 1년 최대 약 297만 원</b>(1인 148.5만 원 × 2)을 세금으로 확정 환급받습니다.
+        </div>
+        <div class="why">
+          <div class="t">💡 원리 &amp; 종목 매칭</div>
+          공제율은 총급여 5,500만 원(종합소득 4,500만 원) 이하 <b style="color:var(--text)">16.5%</b>, 초과 시 <b style="color:var(--text)">13.2%</b>.
+          연금저축 600만 원 + IRP 300만 원 조합이 가장 흔합니다. 계좌 안에서는 <b style="color:var(--text)">TIGER 미국S&amp;P500 같은 국내 상장 미국 ETF</b>를 매수합니다.
+        </div>
+      </div>
+      <div class="wf-step wf-2">
+        <div class="wf-head">
+          <span class="wf-rank">2순위</span>
+          <h3>중개형 ISA</h3>
+          <span class="wf-amt">연 2,000만 원 (총 1억 원)</span>
+        </div>
+        <div class="wf-body">
+          900만 원을 채우고 남는 돈은 <b>연 2,000만 원(누적 1억 원) 한도</b>의 중개형 ISA에 전액 투입합니다. 계좌 내 손익통산 + 비과세(일반형 200만 원 / 서민형 400만 원) + 초과분 9.9% 분리과세가 적용됩니다.
+        </div>
+        <div class="why">
+          <div class="t">💡 원리 &amp; 종목 매칭</div>
+          ISA·연금 안에서는 반드시 <b style="color:var(--text)">국내 상장 미국 ETF</b>를 삽니다. 같은 상품을 일반 위탁계좌에서 사면 <b style="color:var(--text)">배당소득세 15.4%</b>를 맞고, 수익이 1,000만 원을 넘으면 건보료 산정에 100% 반영되기 때문입니다.
+        </div>
+      </div>
+      <div class="wf-step wf-3">
+        <div class="wf-head">
+          <span class="wf-rank">3순위</span>
+          <h3>일반 위탁계좌 · 미국 주식 직투</h3>
+          <span class="wf-amt">한도 없음</span>
+        </div>
+        <div class="wf-body">
+          ISA 한도까지 꽉 채우고 남는 묵직한 목돈은 <b>미국 주식 직접 투자(미장 직투)</b>에 투입합니다. 양도세 22% 분리과세로 종결되어 건보료·종합과세 레이더에 걸리지 않습니다.
+        </div>
+        <div class="why">
+          <div class="t">💡 환노출(H 없는) 상품을 고르는 이유</div>
+          이름 끝에 <b style="color:var(--text)">'(H)'가 없는 환노출</b> 상품이 장기 투자에 유리합니다. 경제 위기로 주가가 폭락할 때 <b style="color:var(--text)">달러 환율 급등이 손실을 방어</b>하는 충격 흡수 장치가 되고, 장기적으로 지수 수익률을 갉아먹는 환헤지 비용도 아낍니다. 국내 상장 미국 ETF는 앱에 찍힌 원화 주가·수익률에 <b style="color:var(--text)">환율이 실시간 100% 반영</b>되어 매도 시 따로 환율 계산이 필요 없습니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="simulator">
   <div class="wrap">
     <div class="eyebrow">Interactive</div>
@@ -411,81 +497,39 @@
   </div>
 </section>
 
-<!-- DAY 0 -->
-<section id="day0">
+<section id="whyus">
   <div class="wrap">
-    <div class="eyebrow">Step 0</div>
-    <h2 class="sec">⏰ 0단계 · 가장 먼저 "시간 시계" 작동시키기</h2>
-    <p class="sec-sub">은퇴 자산 세팅은 <b style="color:var(--text)">'시간'을 선점</b>하는 것이 절반입니다. 오늘 당장 할 수 있고, 비용은 1만 원입니다.</p>
-    <div class="steps-mini">
-      <div class="smini"><div class="n"></div><p><b>1만 원 최초 입금</b> — 오늘 당장 스마트폰 앱으로 <b>연금저축 또는 IRP</b> 계좌를 개설하고 단돈 1만 원을 입금합니다.</p></div>
-      <div class="smini"><div class="n"></div><p><b>휴면 계좌 방지</b> — 1,000원도 가능하지만 잔고가 너무 적으면 장기 미사용 휴면 계좌로 잠길 수 있어, 안전하게 1만 원을 넣어둡니다.</p></div>
-      <div class="smini"><div class="n"></div><p><b>5년 타이머 작동</b> — 연금을 3.3~5.5% 저율과세로 빼 쓰려면 '가입 후 5년'이 필요한데, 이 타이머는 <b>첫 입금일부터</b> 째깍째깍 돌아갑니다.</p></div>
-      <div class="smini"><div class="n"></div><p><b>프리패스 혜택</b> — 5년이 지난 뒤 ISA에서 굴리던 목돈 1억 원을 연금계좌로 옮기면, 국세청은 방금 들어온 1억 원도 <b>'5년 조건을 채운 돈'</b>으로 인정합니다.</p></div>
+    <div class="eyebrow">Why</div>
+    <h2 class="sec">🇺🇸 왜 미국 직투(미장)가 더 유리한가</h2>
+    <p class="sec-sub">ISA·연금 한도를 다 채운 다음, 남는 목돈을 <b style="color:var(--text)">미국 주식 직접 투자</b>에 넣는 이유를 한곳에 모았습니다.</p>
+    <div class="grid">
+      <div class="card">
+        <h3><span class="ico">🛡️</span> 건보료·종합과세 무풍지대</h3>
+        <span class="tag o">세금 구조</span>
+        <p>미국 주식 양도차익은 <b>22% 분리과세</b>로 그 자리에서 끝납니다. <b>1억을 벌든 10억을 벌든</b> 건강보험료 산정에 1원도 반영되지 않고, <b>피부양자 자격도 그대로</b> 유지됩니다. 국내 배당·금융소득처럼 건보료 폭탄이나 종합과세 합산 걱정이 없습니다.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico">📈</span> 수익이 클수록 더 유리</h3>
+        <span class="tag g">구간별 승패</span>
+        <p>연 수익 <b>833만 원 이하</b>면 매년 <b>250만 원 비과세 공제</b> 덕에 사실상 세금이 거의 없고, 연 수익 <b>2,000만 원 초과</b>면 국내 금융소득종합과세(최고 49.5%) 대상을 피해 <b>22% 분리과세</b>로 끝낼 수 있어 압도적으로 유리합니다.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico">🔥</span> 압도적 주주환원</h3>
+        <span class="tag b">구조적 우위</span>
+        <p>애플·마이크로소프트 같은 기업은 번 돈으로 <b>자기 회사 주식을 사서 소각</b>(자사주 소각)합니다. 발행 주식 수가 줄어드니 <b>내 1주의 가치가 가만히 있어도 올라가는</b> 구조적 우위가 있습니다.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico">💵</span> 환노출 = 위기의 방어막</h3>
+        <span class="tag g">환율 효과</span>
+        <p>이름 끝에 <b>'(H)'가 없는 환노출</b> 상품은, 경제 위기로 주가가 폭락할 때 <b>달러 환율 급등이 손실을 상쇄</b>하는 충격 흡수 장치가 됩니다. 장기적으로 지수 수익률을 갉아먹는 <b>환헤지 비용</b>도 아낍니다.</p>
+      </div>
     </div>
-    <div class="why" style="margin-top:16px">
-      <div class="t">💡 왜 1만 원인가?</div>
-      세법상 연금 저율과세 요건은 <b style="color:var(--text)">①가입 후 5년 경과 + ②만 55세 이상</b>입니다. 5년 요건은 미래에 큰돈을 넣어도 소급 적용되지 않으므로, '가입일'이라는 출발선을 오늘 끊어두는 것이 핵심입니다. 이미 <b style="color:var(--text)">55세 이상</b>이라면 5년이 지난 뒤 목돈을 넣은 그 달부터 바로 매월 저율 연금으로 수령할 수 있습니다.
+    <div class="note-box" style="margin-top:16px">
+      📌 <b>순서는 지키세요.</b> 미장 직투는 <b>3순위</b>입니다. 세액공제(연금)와 비과세(ISA)라는 확정 혜택을 먼저 챙긴 <b>뒤에</b> 남는 목돈을 넣어야, 위 장점들이 '추가 수익'으로 쌓입니다. 또한 ISA·연금 <b>계좌 안</b>에서는 미국 현지 주식이 아니라 <b>국내 상장 미국 ETF</b>를 사야 세금 혜택을 받습니다.
     </div>
   </div>
 </section>
 
-<!-- WATERFALL -->
-<section id="waterfall">
-  <div class="wrap">
-    <div class="eyebrow">Step 1</div>
-    <h2 class="sec">🪣 1단계 · 폭포수 계좌 채우기 + 투자 종목 매칭</h2>
-    <p class="sec-sub">투자 가능 금액이 적을 때부터 많아질 때까지, 물통을 순서대로 채워 내려가는 원리입니다.</p>
-    <div class="waterfall">
-      <div class="wf-step wf-1">
-        <div class="wf-head">
-          <span class="wf-rank">1순위</span>
-          <h3>연금저축 + IRP</h3>
-          <span class="wf-amt">1인당 연 900만 원까지</span>
-        </div>
-        <div class="wf-body">
-          연금저축·IRP에 <b>1인당 최대 900만 원</b>까지 먼저 납입해 매년 세액공제를 챙깁니다. 맞벌이 부부가 각자 900만 원씩 꽉 채우면
-          <b>부부 합산 1년 최대 약 297만 원</b>(1인 148.5만 원 × 2)을 세금으로 확정 환급받습니다.
-        </div>
-        <div class="why">
-          <div class="t">💡 원리 &amp; 종목 매칭</div>
-          공제율은 총급여 5,500만 원(종합소득 4,500만 원) 이하 <b style="color:var(--text)">16.5%</b>, 초과 시 <b style="color:var(--text)">13.2%</b>.
-          연금저축 600만 원 + IRP 300만 원 조합이 가장 흔합니다. 계좌 안에서는 <b style="color:var(--text)">TIGER 미국S&amp;P500 같은 국내 상장 미국 ETF</b>를 매수합니다.
-        </div>
-      </div>
-      <div class="wf-step wf-2">
-        <div class="wf-head">
-          <span class="wf-rank">2순위</span>
-          <h3>중개형 ISA</h3>
-          <span class="wf-amt">연 2,000만 원 (총 1억 원)</span>
-        </div>
-        <div class="wf-body">
-          900만 원을 채우고 남는 돈은 <b>연 2,000만 원(누적 1억 원) 한도</b>의 중개형 ISA에 전액 투입합니다. 계좌 내 손익통산 + 비과세(일반형 200만 원 / 서민형 400만 원) + 초과분 9.9% 분리과세가 적용됩니다.
-        </div>
-        <div class="why">
-          <div class="t">💡 원리 &amp; 종목 매칭</div>
-          ISA·연금 안에서는 반드시 <b style="color:var(--text)">국내 상장 미국 ETF</b>를 삽니다. 같은 상품을 일반 위탁계좌에서 사면 <b style="color:var(--text)">배당소득세 15.4%</b>를 맞고, 수익이 1,000만 원을 넘으면 건보료 산정에 100% 반영되기 때문입니다.
-        </div>
-      </div>
-      <div class="wf-step wf-3">
-        <div class="wf-head">
-          <span class="wf-rank">3순위</span>
-          <h3>일반 위탁계좌 · 미국 주식 직투</h3>
-          <span class="wf-amt">한도 없음</span>
-        </div>
-        <div class="wf-body">
-          ISA 한도까지 꽉 채우고 남는 묵직한 목돈은 <b>미국 주식 직접 투자(미장 직투)</b>에 투입합니다. 양도세 22% 분리과세로 종결되어 건보료·종합과세 레이더에 걸리지 않습니다.
-        </div>
-        <div class="why">
-          <div class="t">💡 환노출(H 없는) 상품을 고르는 이유</div>
-          이름 끝에 <b style="color:var(--text)">'(H)'가 없는 환노출</b> 상품이 장기 투자에 유리합니다. 경제 위기로 주가가 폭락할 때 <b style="color:var(--text)">달러 환율 급등이 손실을 방어</b>하는 충격 흡수 장치가 되고, 장기적으로 지수 수익률을 갉아먹는 환헤지 비용도 아낍니다. 국내 상장 미국 ETF는 앱에 찍힌 원화 주가·수익률에 <b style="color:var(--text)">환율이 실시간 100% 반영</b>되어 매도 시 따로 환율 계산이 필요 없습니다.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- DC PENSION -->
 <section id="dcpension">
   <div class="wrap">
     <div class="eyebrow">Add-on</div>
@@ -543,7 +587,108 @@
   </div>
 </section>
 
-<!-- BY AGE -->
+<section id="portfolio">
+  <div class="wrap">
+    <div class="eyebrow">Playbook</div>
+    <h2 class="sec">📊 실전 배당 포트폴리오 세팅 요약</h2>
+    <p class="sec-sub">계좌 성격별로 '어디서 / 무엇을 / 왜' 사는지 매칭한 요약표입니다.</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>계좌</th><th>대표 종목 예시</th><th>핵심 목적</th><th>세금·건보료 포인트</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>연금저축 / IRP</b></td>
+            <td>TIGER 미국S&amp;P500, TIGER 미국나스닥100 (국내 상장)</td>
+            <td>세액공제 + 장기 복리</td>
+            <td>저율 연금과세 3.3~5.5% / 건보료 0 반영</td>
+          </tr>
+          <tr>
+            <td><b>중개형 ISA</b></td>
+            <td>TIGER 미국배당다우존스(SCHD형), TIGER 미국S&amp;P500 (국내 상장)</td>
+            <td>비과세·손익통산 + 원금 출금 현금흐름</td>
+            <td>비과세 200/400만 원, 초과분 9.9% 분리과세</td>
+          </tr>
+          <tr>
+            <td><b>일반 위탁계좌 (배당)</b></td>
+            <td>SCHD, JEPQ 등 <b>미국 현지</b> 배당주/ETF</td>
+            <td>월 현금흐름</td>
+            <td><b>배당 1인 999만 원 컷오프</b>(건보료 방어)</td>
+          </tr>
+          <tr>
+            <td><b>일반 위탁계좌 (성장)</b></td>
+            <td>S&amp;P500/나스닥 ETF, 미국 개별주 직투</td>
+            <td>대규모 자산 증식</td>
+            <td>양도세 22% 분리과세(250만 원 공제) / 건보료 0 반영</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sec-sub" style="margin-top:14px">
+      <b style="color:var(--text)">수익 구간별 승패</b> — 연 수익 <b>833만 원 이하</b>: 250만 원 비과세 공제 덕에 미국 직투가 무조건 유리. 연 수익 <b>2,000만 원 초과</b>: 금융소득종합과세 대상이 되므로 미국 직투(22% 분리과세)가 압도적으로 유리.
+    </p>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow">Tactics</div>
+    <h2 class="sec">🧰 절세 기술 &amp; 꼼수 <span style="font-size:.6em;color:var(--muted);font-weight:600">· 축적·방어기</span></h2>
+    <p class="sec-sub">자산이 커지면 세금보다 '건보료'와 '종합과세 합산'이 더 무섭습니다. 이를 시스템적으로 피하는 기술들입니다.</p>
+    <div class="grid">
+      <div class="card">
+        <span class="tag o">건보료 방어</span>
+        <h3><span class="ico">👫</span> 부부 명의 분산</h3>
+        <p>한국 세금·건보료는 철저히 <b>개인(인별) 과세</b>. 자산을 부부가 반씩 쪼개면 <b>ISA 방어막 2억 원</b>, 연금·배당 한도 모두 2배가 됩니다.</p>
+      </div>
+      <div class="card">
+        <span class="tag o">건보료 방어</span>
+        <h3><span class="ico">✂️</span> 배당 999만 원 컷오프</h3>
+        <p>일반계좌에서 SCHD·JEPQ 등 직접 매수 시 배당을 <b>세전 999만 원</b> 이내로. 1,000만 원을 넘는 순간 전액이 소득에 합산돼 지역가입자 건보료가 급등합니다. 부부 각 999만 원이면 합산 약 <b>2,000만 원(월 166만 원)</b>을 건보료 걱정 없이 창출.</p>
+      </div>
+      <div class="card">
+        <span class="tag g">미장 절세 ①</span>
+        <h3><span class="ico">🔄</span> 250만 원 비과세 영끌</h3>
+        <p>연말에 <b>수익 250만 원</b>만큼만 팔았다가 다음 날 다시 사서(재매수) 매년 기본공제 250만 원을 꼬박꼬박 비과세로 챙깁니다.</p>
+      </div>
+      <div class="card">
+        <span class="tag g">미장 절세 ②</span>
+        <h3><span class="ico">📉</span> 손실 확정(상계)</h3>
+        <p>손실 난 종목을 연말에 팔아(손실 확정) 전체 순수익을 깎아 양도세 과세표준을 낮춥니다.</p>
+      </div>
+      <div class="card">
+        <span class="tag g">미장 절세 ③</span>
+        <h3><span class="ico">🎁</span> 배우자 증여로 단가 리셋</h3>
+        <p>크게 오른 종목을 배우자에게 증여(10년 6억 비과세)해 취득단가를 시세로 리셋한 뒤 매도. <b style="color:var(--orange)">증여 후 최소 1년 이상 보유한 뒤 팔아야</b> 효과가 납니다.</p>
+        <p style="font-size:13px; color:var(--muted); margin-top:8px;">※ 2024년 증여분까지는 증여 직후 바로 팔아도 양도세 0원이 가능했지만, <b style="color:var(--muted)">2025.1.1 이후 증여분부터 해외주식도 이월과세</b>가 적용되어 1년 이내 매도 시 증여자의 원래 취득가액으로 계산됩니다.</p>
+      </div>
+      <div class="card">
+        <span class="tag b">ISA 활용</span>
+        <h3><span class="ico">🏧</span> 원금 출금 꼼수</h3>
+        <p>ISA에서 TIGER 미국배당다우존스 등으로 매월 배당 수령. 3년 만기 전이라도 <b>'원금' 한도 내</b>에서는 페널티 없이 인출 가능 → 시스템이 '원금 출금'으로 처리해 세제 혜택 유지.</p>
+      </div>
+      <div class="card">
+        <span class="tag b">ISA 활용</span>
+        <h3><span class="ico">🌀</span> 풍차돌리기(연금 뻥튀기)</h3>
+        <p>원금이 바닥나기 전, 가입 <b>3년 차</b>에 ISA를 만기 해지하고 통째로 연금계좌로 이체. <b>1,800만 원 한도와 무관하게 전액 무제한 입금</b> 가능. 게다가 전환액의 <b>10%(최대 300만 원)</b>를 그 해에 <b>추가 세액공제</b>까지 받습니다(연 900만 원 한도와 별개).</p>
+      </div>
+      <div class="card">
+        <span class="tag g">구조적 우위</span>
+        <h3><span class="ico">🇺🇸</span> 미장의 주주환원</h3>
+        <p>애플·MS 등은 번 돈으로 자사주를 사서 소각(주주환원). 내 주식 1주의 가치가 가만히 있어도 올라가는 구조적 우위.</p>
+      </div>
+    </div>
+
+    <div class="alert" style="margin-top:20px">
+      <h4>⚠️ ISA 원금 출금 주의사항</h4>
+      <p>원금 출금 시 세금 불이익은 없지만, <b>한 번 뺀 금액만큼 올해 납입 이력은 사라지지 않아 납입 한도가 영구 소멸</b>합니다. 또한 3년 만기 전 원금 한도를 전부 소진한 뒤 '수익금'까지 출금하려 하면 <b>계좌가 중도해지되어 비과세 혜택을 전부 토해내야</b> 합니다.</p>
+    </div>
+  </div>
+</section>
+
+<div class="phase"><div class="wrap"><span class="pe">🔭</span><div><h2 class="pt">관점별로 보기 <small>· 나이·투자금·시간</small></h2><p class="ps">같은 전략을 내 상황의 축으로 다시 본다.</p></div></div></div>
+
 <section id="byage">
   <div class="wrap">
     <div class="eyebrow">View 1</div>
@@ -593,7 +738,6 @@
   </div>
 </section>
 
-<!-- BY MONEY -->
 <section id="bymoney">
   <div class="wrap">
     <div class="eyebrow">View 2</div>
@@ -648,7 +792,6 @@
   </div>
 </section>
 
-<!-- TIMELINE -->
 <section id="timeline">
   <div class="wrap">
     <div class="eyebrow">View 3</div>
@@ -688,143 +831,8 @@
   </div>
 </section>
 
-<!-- SKILLS -->
-<section id="skills">
-  <div class="wrap">
-    <div class="eyebrow">Tactics</div>
-    <h2 class="sec">🧰 절세 기술 &amp; 꼼수 모음</h2>
-    <p class="sec-sub">자산이 커지면 세금보다 '건보료'와 '종합과세 합산'이 더 무섭습니다. 이를 시스템적으로 피하는 기술들입니다.</p>
-    <div class="grid">
-      <div class="card">
-        <span class="tag o">건보료 방어</span>
-        <h3><span class="ico">👫</span> 부부 명의 분산</h3>
-        <p>한국 세금·건보료는 철저히 <b>개인(인별) 과세</b>. 자산을 부부가 반씩 쪼개면 <b>ISA 방어막 2억 원</b>, 연금·배당 한도 모두 2배가 됩니다.</p>
-      </div>
-      <div class="card">
-        <span class="tag o">건보료 방어</span>
-        <h3><span class="ico">✂️</span> 배당 999만 원 컷오프</h3>
-        <p>일반계좌에서 SCHD·JEPQ 등 직접 매수 시 배당을 <b>세전 999만 원</b> 이내로. 1,000만 원을 넘는 순간 전액이 소득에 합산돼 지역가입자 건보료가 급등합니다. 부부 각 999만 원이면 합산 약 <b>2,000만 원(월 166만 원)</b>을 건보료 걱정 없이 창출.</p>
-      </div>
-      <div class="card">
-        <span class="tag g">미장 절세 ①</span>
-        <h3><span class="ico">🔄</span> 250만 원 비과세 영끌</h3>
-        <p>연말에 <b>수익 250만 원</b>만큼만 팔았다가 다음 날 다시 사서(재매수) 매년 기본공제 250만 원을 꼬박꼬박 비과세로 챙깁니다.</p>
-      </div>
-      <div class="card">
-        <span class="tag g">미장 절세 ②</span>
-        <h3><span class="ico">📉</span> 손실 확정(상계)</h3>
-        <p>손실 난 종목을 연말에 팔아(손실 확정) 전체 순수익을 깎아 양도세 과세표준을 낮춥니다.</p>
-      </div>
-      <div class="card">
-        <span class="tag g">미장 절세 ③</span>
-        <h3><span class="ico">🎁</span> 배우자 증여로 단가 리셋</h3>
-        <p>크게 오른 종목을 배우자에게 증여(10년 6억 비과세)해 취득단가를 시세로 리셋한 뒤 매도. <b style="color:var(--orange)">증여 후 최소 1년 이상 보유한 뒤 팔아야</b> 효과가 납니다.</p>
-        <p style="font-size:13px; color:var(--muted); margin-top:8px;">※ 2024년 증여분까지는 증여 직후 바로 팔아도 양도세 0원이 가능했지만, <b style="color:var(--muted)">2025.1.1 이후 증여분부터 해외주식도 이월과세</b>가 적용되어 1년 이내 매도 시 증여자의 원래 취득가액으로 계산됩니다.</p>
-      </div>
-      <div class="card">
-        <span class="tag b">ISA 활용</span>
-        <h3><span class="ico">🏧</span> 원금 출금 꼼수</h3>
-        <p>ISA에서 TIGER 미국배당다우존스 등으로 매월 배당 수령. 3년 만기 전이라도 <b>'원금' 한도 내</b>에서는 페널티 없이 인출 가능 → 시스템이 '원금 출금'으로 처리해 세제 혜택 유지.</p>
-      </div>
-      <div class="card">
-        <span class="tag b">ISA 활용</span>
-        <h3><span class="ico">🌀</span> 풍차돌리기(연금 뻥튀기)</h3>
-        <p>원금이 바닥나기 전, 가입 <b>3년 차</b>에 ISA를 만기 해지하고 통째로 연금계좌로 이체. <b>1,800만 원 한도와 무관하게 전액 무제한 입금</b> 가능. 게다가 전환액의 <b>10%(최대 300만 원)</b>를 그 해에 <b>추가 세액공제</b>까지 받습니다(연 900만 원 한도와 별개).</p>
-      </div>
-      <div class="card">
-        <span class="tag g">구조적 우위</span>
-        <h3><span class="ico">🇺🇸</span> 미장의 주주환원</h3>
-        <p>애플·MS 등은 번 돈으로 자사주를 사서 소각(주주환원). 내 주식 1주의 가치가 가만히 있어도 올라가는 구조적 우위.</p>
-      </div>
-    </div>
+<div class="phase"><div class="wrap"><span class="pe">🌾</span><div><h2 class="pt">빼쓰기 <small>· 수확기</small></h2><p class="ps">세금 폭탄 없이 연금을 인출하는 법.</p></div></div></div>
 
-    <div class="alert" style="margin-top:20px">
-      <h4>⚠️ ISA 원금 출금 주의사항</h4>
-      <p>원금 출금 시 세금 불이익은 없지만, <b>한 번 뺀 금액만큼 올해 납입 이력은 사라지지 않아 납입 한도가 영구 소멸</b>합니다. 또한 3년 만기 전 원금 한도를 전부 소진한 뒤 '수익금'까지 출금하려 하면 <b>계좌가 중도해지되어 비과세 혜택을 전부 토해내야</b> 합니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- PORTFOLIO -->
-<section id="portfolio">
-  <div class="wrap">
-    <div class="eyebrow">Playbook</div>
-    <h2 class="sec">📊 실전 배당 포트폴리오 세팅 요약</h2>
-    <p class="sec-sub">계좌 성격별로 '어디서 / 무엇을 / 왜' 사는지 매칭한 요약표입니다.</p>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr><th>계좌</th><th>대표 종목 예시</th><th>핵심 목적</th><th>세금·건보료 포인트</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>연금저축 / IRP</b></td>
-            <td>TIGER 미국S&amp;P500, TIGER 미국나스닥100 (국내 상장)</td>
-            <td>세액공제 + 장기 복리</td>
-            <td>저율 연금과세 3.3~5.5% / 건보료 0 반영</td>
-          </tr>
-          <tr>
-            <td><b>중개형 ISA</b></td>
-            <td>TIGER 미국배당다우존스(SCHD형), TIGER 미국S&amp;P500 (국내 상장)</td>
-            <td>비과세·손익통산 + 원금 출금 현금흐름</td>
-            <td>비과세 200/400만 원, 초과분 9.9% 분리과세</td>
-          </tr>
-          <tr>
-            <td><b>일반 위탁계좌 (배당)</b></td>
-            <td>SCHD, JEPQ 등 <b>미국 현지</b> 배당주/ETF</td>
-            <td>월 현금흐름</td>
-            <td><b>배당 1인 999만 원 컷오프</b>(건보료 방어)</td>
-          </tr>
-          <tr>
-            <td><b>일반 위탁계좌 (성장)</b></td>
-            <td>S&amp;P500/나스닥 ETF, 미국 개별주 직투</td>
-            <td>대규모 자산 증식</td>
-            <td>양도세 22% 분리과세(250만 원 공제) / 건보료 0 반영</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="sec-sub" style="margin-top:14px">
-      <b style="color:var(--text)">수익 구간별 승패</b> — 연 수익 <b>833만 원 이하</b>: 250만 원 비과세 공제 덕에 미국 직투가 무조건 유리. 연 수익 <b>2,000만 원 초과</b>: 금융소득종합과세 대상이 되므로 미국 직투(22% 분리과세)가 압도적으로 유리.
-    </p>
-  </div>
-</section>
-
-<!-- WHY US -->
-<section id="whyus">
-  <div class="wrap">
-    <div class="eyebrow">Why</div>
-    <h2 class="sec">🇺🇸 왜 미국 직투(미장)가 더 유리한가</h2>
-    <p class="sec-sub">ISA·연금 한도를 다 채운 다음, 남는 목돈을 <b style="color:var(--text)">미국 주식 직접 투자</b>에 넣는 이유를 한곳에 모았습니다.</p>
-    <div class="grid">
-      <div class="card">
-        <h3><span class="ico">🛡️</span> 건보료·종합과세 무풍지대</h3>
-        <span class="tag o">세금 구조</span>
-        <p>미국 주식 양도차익은 <b>22% 분리과세</b>로 그 자리에서 끝납니다. <b>1억을 벌든 10억을 벌든</b> 건강보험료 산정에 1원도 반영되지 않고, <b>피부양자 자격도 그대로</b> 유지됩니다. 국내 배당·금융소득처럼 건보료 폭탄이나 종합과세 합산 걱정이 없습니다.</p>
-      </div>
-      <div class="card">
-        <h3><span class="ico">📈</span> 수익이 클수록 더 유리</h3>
-        <span class="tag g">구간별 승패</span>
-        <p>연 수익 <b>833만 원 이하</b>면 매년 <b>250만 원 비과세 공제</b> 덕에 사실상 세금이 거의 없고, 연 수익 <b>2,000만 원 초과</b>면 국내 금융소득종합과세(최고 49.5%) 대상을 피해 <b>22% 분리과세</b>로 끝낼 수 있어 압도적으로 유리합니다.</p>
-      </div>
-      <div class="card">
-        <h3><span class="ico">🔥</span> 압도적 주주환원</h3>
-        <span class="tag b">구조적 우위</span>
-        <p>애플·마이크로소프트 같은 기업은 번 돈으로 <b>자기 회사 주식을 사서 소각</b>(자사주 소각)합니다. 발행 주식 수가 줄어드니 <b>내 1주의 가치가 가만히 있어도 올라가는</b> 구조적 우위가 있습니다.</p>
-      </div>
-      <div class="card">
-        <h3><span class="ico">💵</span> 환노출 = 위기의 방어막</h3>
-        <span class="tag g">환율 효과</span>
-        <p>이름 끝에 <b>'(H)'가 없는 환노출</b> 상품은, 경제 위기로 주가가 폭락할 때 <b>달러 환율 급등이 손실을 상쇄</b>하는 충격 흡수 장치가 됩니다. 장기적으로 지수 수익률을 갉아먹는 <b>환헤지 비용</b>도 아낍니다.</p>
-      </div>
-    </div>
-    <div class="note-box" style="margin-top:16px">
-      📌 <b>순서는 지키세요.</b> 미장 직투는 <b>3순위</b>입니다. 세액공제(연금)와 비과세(ISA)라는 확정 혜택을 먼저 챙긴 <b>뒤에</b> 남는 목돈을 넣어야, 위 장점들이 '추가 수익'으로 쌓입니다. 또한 ISA·연금 <b>계좌 안</b>에서는 미국 현지 주식이 아니라 <b>국내 상장 미국 ETF</b>를 사야 세금 혜택을 받습니다.
-    </div>
-  </div>
-</section>
-
-<!-- WITHDRAW CALCULATOR -->
 <section id="withdraw">
   <div class="wrap">
     <div class="eyebrow">Interactive · 수확기</div>
@@ -872,11 +880,10 @@
   </div>
 </section>
 
-<!-- MASTER TIPS -->
 <section id="mastertips">
   <div class="wrap">
     <div class="eyebrow">Advanced</div>
-    <h2 class="sec">🧙 고수 비기 (심화)</h2>
+    <h2 class="sec">🧙 고수 비기 <span style="font-size:.6em;color:var(--muted);font-weight:600">· 수확·제도 심화</span></h2>
     <p class="sec-sub">커뮤니티·증권사·전문가 자료에서 추린, 한 단계 위의 절세·인출 기술입니다.</p>
     <div class="grid">
       <div class="card">
@@ -916,7 +923,8 @@
   </div>
 </section>
 
-<!-- BUBBLE DEFENSE -->
+<div class="phase"><div class="wrap"><span class="pe">🛡️</span><div><h2 class="pt">지키기 <small>· 방어</small></h2><p class="ps">버블·하락장 신호와 방어 리밸런싱.</p></div></div></div>
+
 <section id="bubble">
   <div class="wrap">
     <div class="eyebrow">Risk · 2026</div>
