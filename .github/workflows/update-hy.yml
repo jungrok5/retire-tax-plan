@@ -1,13 +1,17 @@
 name: Update HY spread data
 
-# 하이일드 스프레드(FRED)를 매일 받아 hy-data.json으로 커밋.
-# GitHub 러너는 FRED 접속이 되므로(Vercel은 막힘) 여기서 받아 정적 파일로 제공.
+# 하이일드 스프레드(FRED 공식 API)를 매일 받아 hy-data.json으로 커밋.
+# graph CSV는 봇 다운로드를 막으므로 공식 API 사용(키 필요, GitHub Secret에 보관 → 사용자 노출 X).
 # 사용자 요청 때마다 FRED를 치지 않으니 레이트리밋 0.
+#
+# 준비: FRED 무료 키 발급 https://fred.stlouisfed.org/docs/api/api_key.html
+#       → 저장소 Settings → Secrets and variables → Actions → New secret
+#         name=FRED_API_KEY, value=발급키
 
 on:
   schedule:
-    - cron: '0 13 * * *'   # 매일 13:00 UTC (22:00 KST) 1회
-  workflow_dispatch:        # 수동 실행 가능
+    - cron: '0 13 * * *'   # 매일 13:00 UTC (22:00 KST)
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,33 +26,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch FRED & build hy-data.json
+      - name: Fetch FRED API & build hy-data.json
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
-          # FRED는 HTTP/2에서 'stream not closed cleanly(92)'가 잦아 --http1.1 강제.
-          # curl 자체 재시도, 실패해도 스텝은 죽이지 않음(|| true) → 기존 파일 유지.
-          curl --http1.1 --compressed -fsS -m 60 --retry 6 --retry-delay 5 --retry-all-errors \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36" \
-            -H "Accept: text/csv,text/plain,*/*" \
-            "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2" -o hy.csv || echo "::warning::FRED fetch failed"
+          if [ -z "$FRED_API_KEY" ]; then
+            echo "::warning::FRED_API_KEY 시크릿이 없습니다 — 기존 hy-data.json 유지"; exit 0
+          fi
+          curl --http1.1 -fsS -m 40 --retry 5 --retry-delay 4 --retry-all-errors \
+            "https://api.stlouisfed.org/fred/series/observations?series_id=BAMLH0A0HYM2&api_key=${FRED_API_KEY}&file_type=json&observation_start=2018-01-01" \
+            -o hy.json || echo "::warning::FRED API fetch 실패"
           python3 - <<'PY'
-          import csv, io, json, datetime, os, sys
-          if not os.path.exists('hy.csv'):
-              print("no hy.csv -> keep existing hy-data.json"); sys.exit(0)
-          text=open('hy.csv',encoding='utf-8',errors='ignore').read()
+          import json, datetime, os, sys
+          if not os.path.exists('hy.json'):
+              print("no hy.json -> keep existing"); sys.exit(0)
+          try:
+              obs = json.load(open('hy.json')).get('observations', [])
+          except Exception as e:
+              print("parse fail -> keep:", e); sys.exit(0)
           month={}; latest=None
-          for row in csv.reader(io.StringIO(text)):
-              if len(row)<2 or not row[0][:4].isdigit(): continue
-              try: val=float(row[1])
+          for o in obs:
+              d=o.get('date',''); v=o.get('value','.')
+              if not d or v in ('.','',None): continue
+              try: val=float(v)
               except: continue
-              month[row[0][:7]]=val; latest={"date":row[0],"value":val}
+              month[d[:7]]=val; latest={"date":d,"value":val}
           monthly=[[k,month[k]] for k in sorted(month)]
           if len(monthly) < 6 or not latest:
-              print("FRED looked empty -> keep existing"); sys.exit(0)
+              print("empty -> keep existing"); sys.exit(0)
           json.dump({"monthly":monthly,"latest":latest,"updated":datetime.datetime.utcnow().isoformat()+"Z"},
                     open("hy-data.json","w"))
           print("wrote", len(monthly), "months, latest", latest)
           PY
-          rm -f hy.csv
+          rm -f hy.json
 
       - name: Commit if changed
         run: |
