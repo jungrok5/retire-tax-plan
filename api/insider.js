@@ -1,17 +1,20 @@
-// Vercel Serverless Function — 내부자(Form 4) 거래 프록시
+// Vercel Serverless Function — 내부자(Form 4) 거래 프록시 (+캐시)
 // 키(FINNHUB_KEY)는 Vercel 환경변수에만 저장되고, 브라우저로 절대 노출되지 않습니다.
 //
+// 캐시: CDN(s-maxage 1h) + 워밍 인스턴스 메모리(마지막 정상 데이터) → 호출 최소화·끊김 방지
 // 사용:  /api/insider?symbol=NVDA
-// 응답:  { symbol, months: [ { ym:"2026-05", net, buy, sell }, ... ] }
-//        net = 내부자 공개시장 순매수액($, 매수 P − 매도 S). 양수=순매수, 음수=순매도.
+// 응답:  { symbol, months: [ { ym, net, buy, sell } ], updated }
 
 const ALLOW = new Set([
   "NVDA","MSFT","AVGO","AAPL","GOOGL","AMZN","META","TSLA",
   "AMD","PLTR","SMCI","MU","ORCL","CRM","ARM","DELL"
 ]);
 
+const TTL_MS = 1000 * 60 * 60;                 // 메모리 캐시 1시간
+const CACHE_HEADER = "public, s-maxage=3600, stale-while-revalidate=86400";
+const MEM = globalThis.__insCache || (globalThis.__insCache = {});
+
 module.exports = async (req, res) => {
-  // 어느 도메인(깃허브 페이지스 등)에서도 호출 가능하도록 CORS 허용
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   if (req.method === "OPTIONS") { res.status(204).end(); return; }
@@ -19,10 +22,18 @@ module.exports = async (req, res) => {
   const symbol = String((req.query.symbol || "NVDA")).toUpperCase();
   if (!ALLOW.has(symbol)) { res.status(400).json({ error: "symbol_not_allowed" }); return; }
 
+  const now = Date.now();
+  const hit = MEM[symbol];
+  if (hit && now - hit.ts < TTL_MS && hit.data.months.length) {
+    res.setHeader("Cache-Control", CACHE_HEADER);
+    res.setHeader("X-Cache", "MEM");
+    res.status(200).json(hit.data);
+    return;
+  }
+
   const key = process.env.FINNHUB_KEY;
   if (!key) { res.status(500).json({ error: "FINNHUB_KEY_not_set" }); return; }
 
-  // 최근 ~13개월
   const to = new Date();
   const from = new Date(); from.setMonth(from.getMonth() - 13);
   const f = (d) => d.toISOString().slice(0, 10);
@@ -30,11 +41,10 @@ module.exports = async (req, res) => {
 
   try {
     const r = await fetch(url);
-    if (!r.ok) { res.status(502).json({ error: "upstream_" + r.status }); return; }
+    if (!r.ok) throw new Error("upstream_" + r.status);
     const j = await r.json();
     const data = (j && j.data) ? j.data : [];
 
-    // 공개시장 매수(P)·매도(S)만 월별로 집계 (스톡옵션/증여 등 제외)
     const m = {};
     for (const t of data) {
       const code = t.transactionCode;
@@ -54,10 +64,18 @@ module.exports = async (req, res) => {
       sell: Math.round(m[ym].sell),
     }));
 
-    // CDN 캐시 1시간(과도한 호출 방지)
-    res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
-    res.status(200).json({ symbol, months });
+    const out = { symbol, months, updated: new Date().toISOString() };
+    if (months.length) MEM[symbol] = { ts: now, data: out };
+    res.setHeader("Cache-Control", CACHE_HEADER);
+    res.setHeader("X-Cache", "MISS");
+    res.status(200).json(out);
   } catch (e) {
-    res.status(502).json({ error: "fetch_failed" });
+    if (hit && hit.data.months.length) {
+      res.setHeader("Cache-Control", CACHE_HEADER);
+      res.setHeader("X-Cache", "STALE");
+      res.status(200).json({ ...hit.data, stale: true });
+      return;
+    }
+    res.status(502).json({ error: String(e.message || "fetch_failed") });
   }
 };
