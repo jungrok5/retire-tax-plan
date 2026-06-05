@@ -1290,6 +1290,7 @@
     var tabs=document.querySelectorAll('#miTabs .tab-btn');
     function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
     function miMoney(n){var a=Math.abs(n),s='−$';if(a>=1e9)return s+(a/1e9).toFixed(1)+'B';if(a>=1e6)return s+(a/1e6).toFixed(0)+'M';if(a>=1e3)return s+(a/1e3).toFixed(0)+'K';return s+a;}
+    function fmtTime(iso){try{return new Date(iso).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
     function renderMI(rows){
       if(!rows||!rows.length){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">데이터가 없습니다.</div>'; return; }
       var d=rows.slice(0,12), W=1000, rowH=30, top=8, Lx=148, valW=92, pad=10;
@@ -1310,7 +1311,8 @@
       if(!API_MI){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브는 Vercel 배포에서 표시됩니다.</div>'; return; }
       miStatus.textContent='불러오는 중…';
       fetch(API_MI+'?view='+view).then(function(r){return r.json();}).then(function(j){
-        miStatus.textContent=''; renderMI(j.rows||[]);
+        renderMI(j.rows||[]);
+        miStatus.textContent = j.updated ? ('기준 '+fmtTime(j.updated)+(j.stale?' (이전)':'')) : '';
         if(miSrc) miSrc.href = (view==='top-sales-week') ? 'http://openinsider.com/top-insider-sales-of-the-week' : 'http://openinsider.com/latest-cluster-sells';
       }).catch(function(){ miStatus.textContent=''; miChart.innerHTML='<div style="padding:18px;text-align:center;color:#ff6b6b;font-size:13px">불러오지 못했습니다.</div>'; });
     }
