@@ -267,6 +267,35 @@
   .chart-cap a { color:#9cb8ff; font-weight:600; text-decoration:none; white-space:nowrap; }
   .chart-cap a:hover { text-decoration:underline; }
 
+  /* TODO CHECKLIST */
+  .todo { background:linear-gradient(180deg, rgba(45,212,167,.10), rgba(45,212,167,.03)); border:1px solid rgba(45,212,167,.4); border-radius:var(--radius); padding:20px 22px; margin-bottom:24px; }
+  .todo h3 { margin:0 0 12px; font-size:18px; letter-spacing:-.3px; }
+  .todo ul { list-style:none; margin:0; padding:0; display:grid; gap:9px; }
+  .todo li { display:flex; gap:11px; align-items:flex-start; font-size:14.5px; color:var(--text); cursor:pointer; }
+  .todo li .box { flex:none; width:22px; height:22px; border-radius:7px; border:2px solid var(--green); display:grid; place-items:center; font-size:13px; color:transparent; transition:.15s; margin-top:1px; }
+  .todo li.done .box { background:var(--green); color:#06281f; }
+  .todo li.done .tx { color:var(--muted); text-decoration:line-through; }
+  .todo li .tx b { color:var(--text); }
+  .todo .small { font-size:12.5px; color:var(--muted); margin-top:12px; }
+
+  /* VERDICT (신호등) */
+  .verdict { display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 20px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .verdict .dot { width:16px; height:16px; border-radius:50%; flex:none; box-shadow:0 0 0 4px rgba(255,255,255,.05); }
+  .verdict .vt { font-weight:800; font-size:16px; }
+  .verdict .vs2 { color:var(--muted); font-size:13.5px; margin-top:2px; }
+
+  /* TERMS + FAQ (details) */
+  details.acc { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:0; margin:0 0 10px; overflow:hidden; }
+  details.acc > summary { list-style:none; cursor:pointer; padding:14px 16px; font-weight:700; font-size:14.5px; display:flex; justify-content:space-between; gap:10px; }
+  details.acc > summary::-webkit-details-marker { display:none; }
+  details.acc > summary::after { content:"+"; color:var(--muted); font-weight:800; }
+  details.acc[open] > summary::after { content:"−"; }
+  details.acc .body { padding:0 16px 15px; color:var(--muted); font-size:14px; }
+  details.acc .body b { color:var(--text); }
+  .terms-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px 18px; }
+  .terms-grid div { font-size:13.5px; color:var(--muted); }
+  .terms-grid b { color:var(--text); }
+
   /* footer */
   footer { border-top:1px solid var(--line); padding:34px 0 60px; color:var(--muted); font-size:13.5px; }
   .disclaim { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13.5px; color:var(--muted); }
@@ -300,7 +329,7 @@
       <a href="#day0">0단계</a>
       <a href="#waterfall">폭포수</a>
       <a href="#simulator">배분계산기</a>
-      <a href="#whyus">왜 미장?</a>
+      <a href="#whyus">왜 미국주식?</a>
       <a href="#dcpension">퇴직연금</a>
       <a href="#portfolio">포트폴리오</a>
       <a href="#skills">절세기술</a>
@@ -310,6 +339,7 @@
       <a href="#withdraw">인출계산기</a>
       <a href="#mastertips">고수비기</a>
       <a href="#bubble">버블방어</a>
+      <a href="#faq">FAQ</a>
     </div>
   </div>
 </nav>
@@ -336,6 +366,37 @@
     <div class="eyebrow">Overview</div>
     <h2 class="sec">한눈에 보는 전체 구조</h2>
     <p class="sec-sub">물통을 위에서부터 순서대로 채우는 <b style="color:var(--text)">폭포수(Waterfall)</b> 원리입니다. 세금 혜택이 큰 계좌부터 채우고, 넘치면 다음 계좌로 흘려보냅니다.</p>
+
+    <div class="todo">
+      <h3>✅ 오늘 할 일 (초보용 · 클릭해서 체크)</h3>
+      <ul id="todoList">
+        <li><span class="box">✓</span><span class="tx"><b>증권사 앱 설치</b> — 미래에셋·삼성·키움·한국투자 등 어디나 OK</span></li>
+        <li><span class="box">✓</span><span class="tx"><b>연금저축펀드 계좌 개설</b>(앱에서 '연금저축' 검색 → 비대면 개설)</span></li>
+        <li><span class="box">✓</span><span class="tx"><b>1만 원 입금</b> → '5년 타이머'와 저율과세 자격 ON (0단계)</span></li>
+        <li><span class="box">✓</span><span class="tx">그 계좌에서 <b>TIGER 미국S&amp;P500</b>(국내 상장, 이름에 'H' 없는 환노출) 매수</span></li>
+        <li><span class="box">✓</span><span class="tx">여력이 되면 <b>폭포수 순서</b>대로(연금 900 → ISA 2,000 → 미국주식)로 늘리기</span></li>
+      </ul>
+      <div class="small">※ 특정 상품·증권사 추천이 아니라 따라 하기 쉬운 예시입니다. 자세한 이유는 아래에서 단계별로 설명합니다.</div>
+    </div>
+
+    <details class="acc">
+      <summary>📖 용어 30초 정리 (미장·ISA·IRP·DC 등)</summary>
+      <div class="body">
+        <div class="terms-grid">
+          <div><b>미장 / 미국 직투</b> — 미국 주식시장에 직접 투자</div>
+          <div><b>연금저축(펀드)</b> — 세액공제 받는 개인 연금계좌</div>
+          <div><b>IRP</b> — 개인형 퇴직연금(세액공제·퇴직금 보관)</div>
+          <div><b>DC형</b> — 본인이 직접 굴리는 회사 퇴직연금</div>
+          <div><b>ISA</b> — 비과세·분리과세 만능 절세계좌</div>
+          <div><b>폭포수</b> — 혜택 큰 계좌부터 순서대로 채우기</div>
+          <div><b>손익통산</b> — 이익과 손실을 합쳐 세금 계산</div>
+          <div><b>환노출('H' 없음)</b> — 환율 변동이 그대로 반영(위기 방어)</div>
+          <div><b>컷오프</b> — 세금·건보료 폭탄을 피하는 금액 상한선</div>
+          <div><b>하이일드 스프레드</b> — 위험 회사채 금리차(돈 마름 신호)</div>
+        </div>
+      </div>
+    </details>
+
     <div class="grid">
       <div class="card">
         <h3><span class="ico">⏰</span> 시간 선점</h3>
@@ -460,7 +521,7 @@
           <div class="hint">부부는 인별 과세라 한도가 2배(연금 1,800 · ISA 4,000만 원)로 확장됩니다.</div>
         </div>
         <div class="field">
-          <label>올해 투자 가능 금액 (만원)</label>
+          <label id="investLabel">올해 투자 가능 금액 (부부 합산, 만원)</label>
           <input type="number" id="invest" value="5000" min="0" step="100" />
         </div>
         <div class="field">
@@ -488,7 +549,7 @@
           </div>
         </div>
         <div class="kpis">
-          <div class="kpi"><div class="k">예상 세액공제 환급</div><div class="v gold" id="kRefund">–</div><div class="s">연금 납입분 × 공제율</div></div>
+          <div class="kpi"><div class="k">예상 세액공제 환급</div><div class="v gold" id="kRefund">–</div><div class="s">세금에서 돌려받는 돈(투자수익 아님)</div></div>
           <div class="kpi"><div class="k">건보료 안전 배당 한도</div><div class="v green" id="kDiv">–</div><div class="s">일반계좌 세전 / 1인 999만</div></div>
         </div>
         <div class="note-box" id="ageNote"></div>
@@ -753,7 +814,7 @@
         <span class="tag g">1순위만</span>
         <h3><span class="ico">①</span> 연금저축 + IRP에 전액</h3>
         <p>전액을 연금계좌(연금저축 600 + IRP 300)에 넣어 <b>세액공제 16.5%/13.2%</b>를 100% 챙깁니다. 환급금은 다시 투자. 계좌 안에서는 국내 상장 미국 ETF 매수.</p>
-        <p style="margin-top:10px"><b>예) 600만 원 투자</b> → 16.5% 구간이면 약 99만 원 환급. 사실상 무위험 16.5% 수익.</p>
+        <p style="margin-top:10px"><b>예) 600만 원 납입</b> → 16.5% 구간이면 약 99만 원을 <b>세금에서 환급</b>(납입액 대비 16.5% 즉시 돌려받음 — 투자 손익과는 별개).</p>
       </div>
     </div>
     <div class="tab-panel" id="m2">
@@ -931,6 +992,11 @@
     <h2 class="sec">📉 버블·하락장 방어 (리스크 관리)</h2>
     <p class="sec-sub">요즘 'AI 버블' 경고가 많죠. <b style="color:var(--text)">지금이 위험한지 신호를 바로 보고</b>, 경보가 켜지면 절세계좌 안에서 어떻게 방어할지 정리했습니다. <b style="color:var(--gold)">※ 시장 예측이 아니라 '확률을 관리'하는 리스크 관리입니다 — 신호가 켜졌다고 폭락이 확정은 아닙니다.</b></p>
 
+    <div class="verdict" id="bubbleVerdict">
+      <span class="dot" style="background:#2dd4a7"></span>
+      <div><div class="vt">현재 종합 신호: 계산 중…</div><div class="vs2">1순위 = 하이일드 스프레드</div></div>
+    </div>
+
     <h3 style="font-size:20px; margin:8px 0 14px; letter-spacing:-.3px;">① 지금이 위험한가 — 닷컴(2000) vs 지금(AI·2026)</h3>
     <div class="table-scroll">
       <table>
@@ -958,8 +1024,8 @@
         <div id="hyChart"></div>
       </div>
       <div class="chart-cap">
-        <span>월말 기준 · 2018~현재 · 색띠=위험구간 · 스파이크: 2018말·코로나(장중 ~10.9%)·2022 긴축 · 현재 ~2.7%(안정)</span>
-        <a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">실시간 정확값(FRED) →</a>
+        <span>월말 데이터(<b style="color:var(--text)">수동 갱신</b>·실시간 아님) · 색띠=위험구간 · 스파이크: 2018말·코로나(장중 ~10.9%)·2022 긴축 · 현재 ~2.7%(안정)</span>
+        <a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">실시간 최신값(FRED) →</a>
       </div>
     </div>
 
@@ -1057,6 +1123,29 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <h2 class="sec">❓ 자주 묻는 질문</h2>
+    <p class="sec-sub">처음 시작할 때 가장 많이 막히는 것들만 모았습니다.</p>
+
+    <details class="acc"><summary>증권사는 어디서 시작하나요?</summary><div class="body">미래에셋·삼성·키움·한국투자·KB 등 <b>어느 증권사든</b> 됩니다. 앱에서 <b>'연금저축펀드'</b> 또는 <b>'IRP'</b>, <b>'중개형 ISA'</b>를 검색해 <b>비대면으로 개설</b>하면 됩니다. (이 사이트는 특정 증권사를 추천하지 않습니다.)</div></details>
+
+    <details class="acc"><summary>이미 IRP/연금저축이 있어요. 새로 만들어야 하나요?</summary><div class="body">아니요. <b>기존 계좌를 그대로 쓰면</b> 됩니다. 5년 타이머는 '가장 먼저 가입한 계좌'의 최초 입금일부터 흐르므로, 이미 있다면 그 자격이 살아 있습니다. 한도(세액공제 900만·ISA 2,000만)는 사람 기준 합산입니다.</div></details>
+
+    <details class="acc"><summary>연금저축펀드 vs IRP, 뭐가 달라요?</summary><div class="body"><b>연금저축펀드</b>는 주식형 ETF에 <b>100%</b> 투자 가능(자유로움). <b>IRP</b>는 <b>위험자산 70%</b> 제한(안전자산 30% 의무) — 대신 퇴직금을 넣을 수 있습니다. 보통 <b>연금저축 600 + IRP 300 = 900만 원</b>으로 세액공제를 꽉 채웁니다.</div></details>
+
+    <details class="acc"><summary>계좌 안에서 정확히 뭘 사요?</summary><div class="body">연금·ISA 안에서는 <b>국내 상장 미국 ETF</b>(예: TIGER 미국S&amp;P500, TIGER 미국나스닥100) — 이름에 <b>'(H)'가 없는 환노출</b> 상품. 미국 현지 주식을 직접 사는 건 '일반 증권계좌(3순위)'에서 합니다.</div></details>
+
+    <details class="acc"><summary>목돈이 적은데 순서를 꼭 지켜야 하나요?</summary><div class="body">네, <b>혜택 큰 순서</b>가 핵심입니다. 적으면 <b>연금부터</b>(세액공제 16.5%/13.2% 즉시 환급), 남으면 ISA, 더 남으면 미국 직투. 위 <b>배분계산기</b>에 금액을 넣으면 자동으로 나눠줍니다.</div></details>
+
+    <details class="acc"><summary>ISA 의무가입 기간이 3년인가요?</summary><div class="body">네, <b>3년</b>입니다(만기 후 연장·재가입 가능). 비과세 한도는 일반형 200만·서민형 400만 원, 초과분은 9.9% 분리과세. 만기 자금을 <b>연금계좌로 옮기면 10%(최대 300만 원) 추가 세액공제</b>까지 받습니다('풍차돌리기').</div></details>
+
+    <details class="acc"><summary>부부가 아니어도 되나요?</summary><div class="body">물론입니다. 1인 기준으로 그대로 적용하면 됩니다(연금 900·ISA 2,000). <b>부부</b>면 인별 과세라 한도·방어막이 <b>2배</b>로 커지는 것뿐입니다. 배분계산기에서 1인/부부를 바꿔 비교해 보세요.</div></details>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="consult">
@@ -1118,6 +1207,8 @@
     var pensionLimit = couple ? 1800 : 900;   // 세액공제 한도 (만원)
     var isaLimit = couple ? 4000 : 2000;       // ISA 연 납입 (만원)
     var divLimit = couple ? 1998 : 999;        // 건보료 안전 배당 (만원)
+    var lbl = document.getElementById('investLabel');
+    if (lbl) lbl.textContent = couple ? '올해 투자 가능 금액 (부부 합산, 만원)' : '올해 투자 가능 금액 (1인, 만원)';
 
     var pension = Math.min(invest, pensionLimit);
     var isa = Math.min(Math.max(invest - pension, 0), isaLimit);
@@ -1236,6 +1327,19 @@
     s+='<text x="'+(cx-8)+'" y="'+(cy+4)+'" fill="#2dd4a7" font-size="11.5" font-weight="800" text-anchor="end">현재 '+HY[ci][1]+'%</text>';
     s+='</svg>';
     el.innerHTML=s;
+
+    // 종합 신호등 (1순위 = 하이일드 최신값 기반)
+    var cur = HY[ci][1];
+    var vd = document.getElementById('bubbleVerdict');
+    if (vd) {
+      var color, word, desc;
+      if (cur < 4) { color='#2dd4a7'; word='🟢 정상'; desc='신용시장 안정 — 돈 마름 징후 없음'; }
+      else if (cur < 6) { color='#ffa552'; word='🟡 경계'; desc='스프레드 상승 — 자금경색 주의'; }
+      else { color='#ff6b6b'; word='🔴 위험'; desc='신용 경색 진행 — 방어 점검'; }
+      var dot=vd.querySelector('.dot'); if(dot) dot.style.background=color;
+      var vt=vd.querySelector('.vt'); if(vt) vt.textContent='현재 종합 신호: '+word;
+      var vs=vd.querySelector('.vs2'); if(vs) vs.innerHTML='1순위 하이일드 스프레드 <b style="color:'+color+'">'+cur+'%</b> ('+desc+') · 금·내부자는 보조 신호';
+    }
   })();
 
   // ===== 시장 전체 매도 차트 (OpenInsider via Vercel) =====
@@ -1288,6 +1392,23 @@
     viewTabs.forEach(function(b){ b.addEventListener('click', function(){ viewTabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); loadMI(b.getAttribute('data-v')); }); });
     if(execBtn){ execBtn.addEventListener('click', function(){ execOnly=!execOnly; execBtn.classList.toggle('active',execOnly); renderMI(lastRows); }); }
     loadMI('cluster-sells');
+  })();
+
+  // ===== 오늘 할 일 체크리스트 (클릭 토글 + 기억) =====
+  (function(){
+    var list=document.getElementById('todoList');
+    if(!list) return;
+    var items=list.querySelectorAll('li');
+    var saved={};
+    try{ saved=JSON.parse(localStorage.getItem('todoDone')||'{}'); }catch(e){}
+    items.forEach(function(li,i){
+      if(saved[i]) li.classList.add('done');
+      li.addEventListener('click', function(){
+        li.classList.toggle('done');
+        saved[i]=li.classList.contains('done');
+        try{ localStorage.setItem('todoDone', JSON.stringify(saved)); }catch(e){}
+      });
+    });
   })();
 </script>
 </body>
