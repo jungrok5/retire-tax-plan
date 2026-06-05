@@ -289,7 +289,7 @@
     </button>
     <div class="links" id="navLinks">
       <a href="#overview">한눈에</a>
-      <a href="#simulator">시뮬레이터</a>
+      <a href="#simulator">배분계산기</a>
       <a href="#day0">0단계</a>
       <a href="#waterfall">폭포수</a>
       <a href="#dcpension">퇴직연금</a>
@@ -357,7 +357,7 @@
 <section id="simulator">
   <div class="wrap">
     <div class="eyebrow">Interactive</div>
-    <h2 class="sec">🧮 내 상황 시뮬레이터</h2>
+    <h2 class="sec">🧮 내 상황 시뮬레이터 <span style="font-size:.6em;color:var(--muted);font-weight:600">· 자금 배분</span></h2>
     <p class="sec-sub">내 나이와 올해 투자 가능 금액을 넣으면 <b style="color:var(--text)">폭포수 배분</b>과 <b style="color:var(--text)">예상 세액공제 환급액</b>, 나이에 맞는 행동을 즉시 계산합니다.</p>
     <div class="sim">
       <div class="sim-form">
@@ -973,26 +973,9 @@
 
     <div class="sig">
       <h4>3️⃣ 핵심 경영진(내부자) 대규모 매도</h4>
-      <p class="sub">회사의 실제 ROI를 가장 잘 아는 창업자·CEO가, 장밋빛 발표 뒤에서 지분을 대량 매도하면 '꼭지'의 전형적 인간 지표입니다. 내부자 <b>매수 대비 매도 비율이 역사적 고점</b>이면 경계.</p>
-      <div class="vs"><span class="ok">정상 ▸ 지분 유지·자사주 매입</span><span class="bad">위험 ▸ 경영진의 공격적 대량 매도</span></div>
-      <div class="note-box" style="margin-top:4px">
-        📖 <b>OpenInsider에서 뭘 봐야 하나 (해석 가이드)</b><br/>
-        ① 아래 <b>'집중매도(Cluster Sells)'</b> 링크로 들어가기 — 한 종목을 <b>여러 임원이 동시에</b> 파는 게 가장 강한 신호입니다.<br/>
-        ② 표에서 볼 칸 → <b>Title</b>에 CEO·CFO·Dir(핵심 경영진), <b>Trade Type</b>이 <b>'S - Sale'(매도)</b>, <b>Value</b>(거래금액 $)가 큰지, 그리고 <b>AI·반도체</b> 같은 버블 중심 종목인지.<br/>
-        ③ 해석 → 매수(<b>P</b>) 거의 없이 <b>매도(S)만 쏟아지면 경계</b>. 반대로 임원이 자기 돈으로 <b>사들이면(P) 긍정</b> 신호.
-        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">① 집중매도(Cluster Sells) →</a>
-          <a href="http://openinsider.com/top-insider-sales-of-the-week" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">② 이번 주 최대 매도 →</a>
-          <a href="https://finviz.com/insidertrading.ashx?tc=2" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">Finviz 매도 보기 →</a>
-        </div>
-        <div style="font-size:12px;color:var(--muted);margin-top:9px">※ 무료로 <b>임베드 가능한 '내부자 실시간 차트' 위젯·오픈소스는 없습니다</b> — OpenInsider·Finviz는 외부삽입(CORS) 차단, 무료 API는 키가 필요합니다. 그래서 위 링크에서 직접 봅니다.</div>
-      </div>
-    </div>
-
-    <div class="sig">
-      <h4>📡 라이브: 내부자 순매수/순매도 (월별)</h4>
-      <p class="sub">종목별 내부자(임원)의 <b>공개시장 매수(P) − 매도(S)</b> 순액을 월별로. <b style="color:var(--green)">초록=순매수</b> / <b style="color:var(--red)">빨강=순매도</b>. SEC Form 4 신고 기반(월 단위 집계).</p>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <p class="sub">회사의 실제 ROI를 가장 잘 아는 창업자·CEO가 장밋빛 발표 뒤에서 지분을 대량 매도하면 '꼭지'의 전형적 신호입니다. 아래 차트로 <b>종목별 내부자 순매수/순매도</b>를 직접 확인하세요. <span style="color:var(--muted)">(SEC Form 4 = 거래 후 ~2영업일 신고, 월 단위 집계)</span></p>
+      <div class="vs"><span class="ok">정상 ▸ 매수(P)·자사주 매입</span><span class="bad">위험 ▸ 매수 없이 매도(S)만 쏟아짐</span></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 10px">
         <label for="insTicker" style="font-size:13px;color:var(--muted);font-weight:700">종목</label>
         <select id="insTicker" style="background:var(--bg-soft);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 11px;font-family:inherit;font-size:14px;font-weight:700">
           <option>NVDA</option><option>MSFT</option><option>AVGO</option><option>AMD</option><option>PLTR</option><option>SMCI</option><option>MU</option><option>ORCL</option><option>CRM</option><option>ARM</option><option>DELL</option><option>AAPL</option><option>GOOGL</option><option>AMZN</option><option>META</option><option>TSLA</option>
@@ -1000,7 +983,14 @@
         <span id="insStatus" style="font-size:12px;color:var(--muted)"></span>
       </div>
       <div class="chart-box" style="padding:10px 8px 4px"><div id="insChart"></div></div>
-      <div class="chart-cap"><span id="insCap">데이터: Finnhub · SEC Form 4 · 공개시장 매수−매도 순액($)</span></div>
+      <div class="chart-cap"><span id="insCap">월별 <b style="color:var(--green)">순매수(초록)</b> / <b style="color:var(--red)">순매도(빨강)</b> · 데이터: Finnhub · SEC Form 4</span></div>
+      <div class="note-box" style="margin-top:12px; font-size:13px">
+        🔎 <b>시장 전체의 '집중매도'</b>(여러 종목에서 임원들이 동시에 파는 흐름)는 OpenInsider에서 — 표의 <b>Trade Type=S(매도)</b> · <b>Value(금액)</b> · <b>Title=CEO·CFO</b>가 핵심 포인트.
+        <div style="margin-top:9px; display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">집중매도(Cluster Sells) →</a>
+          <a href="http://openinsider.com/top-insider-sales-of-the-week" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">이번 주 최대 매도 →</a>
+        </div>
+      </div>
     </div>
 
     <h3 style="font-size:20px; margin:30px 0 14px; letter-spacing:-.3px;">③ 🛡️ 절세계좌 방어 리밸런싱</h3>
