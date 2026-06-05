@@ -60,15 +60,38 @@
     background: rgba(11,16,32,.72);
     border-bottom: 1px solid var(--line);
   }
-  nav .wrap { display: flex; align-items: center; gap: 18px; height: 60px; }
+  nav .wrap { display: flex; align-items: center; gap: 18px; height: 60px; position: relative; }
   nav .logo { font-weight: 800; letter-spacing: -.3px; white-space: nowrap; }
   nav .logo span { color: var(--brand); }
-  nav .links { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; overflow-x: auto; }
+  nav .links { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
   nav .links a {
     color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
     padding: 7px 11px; border-radius: 10px; white-space: nowrap;
   }
   nav .links a:hover { color: var(--text); background: var(--card); }
+  /* 햄버거 버튼 (모바일 전용) */
+  .hamburger {
+    display: none; margin-left: auto; width: 42px; height: 38px; flex: none;
+    background: var(--card); border: 1px solid var(--line); border-radius: 11px;
+    cursor: pointer; padding: 0; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  }
+  .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; transition: .25s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  @media (max-width: 860px) {
+    .hamburger { display: flex; }
+    nav .links {
+      position: absolute; top: 60px; left: 0; right: 0; margin: 0;
+      flex-direction: column; align-items: stretch; gap: 2px;
+      background: rgba(11,16,32,.96); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); padding: 10px 16px 14px;
+      max-height: calc(100vh - 60px); overflow-y: auto;
+      display: none;
+    }
+    nav .links.open { display: flex; }
+    nav .links a { font-size: 15px; padding: 11px 12px; }
+  }
 
   /* HERO */
   header.hero { padding: 70px 0 30px; }
@@ -239,7 +262,10 @@
 <nav>
   <div class="wrap">
     <div class="logo">💰 노후 절세 <span>마스터플랜</span></div>
-    <div class="links">
+    <button class="hamburger" id="navToggle" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="links" id="navLinks">
       <a href="#overview">한눈에</a>
       <a href="#simulator">시뮬레이터</a>
       <a href="#day0">0단계</a>
@@ -733,6 +759,24 @@
 </footer>
 
 <script>
+  // ===== 모바일 햄버거 메뉴 =====
+  (function(){
+    var btn = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    function setOpen(open){
+      links.classList.toggle('open', open);
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function(){ setOpen(!links.classList.contains('open')); });
+    // 메뉴 항목 클릭 시 닫기
+    links.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ setOpen(false); });
+    });
+    // 데스크톱으로 넓어지면 열림 상태 초기화
+    window.addEventListener('resize', function(){ if (window.innerWidth > 860) setOpen(false); });
+  })();
+
   // ===== 시뮬레이터 =====
   var state = { household: 'couple', rate: 16.5 };
   function won(manwon){ // 만원 -> 보기 좋은 문자열
