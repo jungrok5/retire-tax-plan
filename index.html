@@ -989,6 +989,20 @@
       </div>
     </div>
 
+    <div class="sig">
+      <h4>📡 라이브: 내부자 순매수/순매도 (월별)</h4>
+      <p class="sub">종목별 내부자(임원)의 <b>공개시장 매수(P) − 매도(S)</b> 순액을 월별로. <b style="color:var(--green)">초록=순매수</b> / <b style="color:var(--red)">빨강=순매도</b>. SEC Form 4 신고 기반(월 단위 집계).</p>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+        <label for="insTicker" style="font-size:13px;color:var(--muted);font-weight:700">종목</label>
+        <select id="insTicker" style="background:var(--bg-soft);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 11px;font-family:inherit;font-size:14px;font-weight:700">
+          <option>NVDA</option><option>MSFT</option><option>AVGO</option><option>AMD</option><option>PLTR</option><option>SMCI</option><option>MU</option><option>ORCL</option><option>CRM</option><option>ARM</option><option>DELL</option><option>AAPL</option><option>GOOGL</option><option>AMZN</option><option>META</option><option>TSLA</option>
+        </select>
+        <span id="insStatus" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+      <div class="chart-box" style="padding:10px 8px 4px"><div id="insChart"></div></div>
+      <div class="chart-cap"><span id="insCap">데이터: Finnhub · SEC Form 4 · 공개시장 매수−매도 순액($)</span></div>
+    </div>
+
     <h3 style="font-size:20px; margin:30px 0 14px; letter-spacing:-.3px;">③ 🛡️ 절세계좌 방어 리밸런싱</h3>
     <p class="sec-sub" style="margin-bottom:16px">신호가 켜지면 <b style="color:var(--text)">절세계좌 안에서 갈아타는 게 핵심</b>입니다 — 매도해도 세금이 즉시 발생하지 않아 마음 편히 리밸런싱할 수 있으니까요.</p>
 
@@ -1224,6 +1238,41 @@
     s+='<text x="'+(cx-8)+'" y="'+(cy+4)+'" fill="#2dd4a7" font-size="11.5" font-weight="800" text-anchor="end">현재 '+HY[ci][1]+'%</text>';
     s+='</svg>';
     el.innerHTML=s;
+  })();
+
+  // ===== 라이브 내부자 차트 (Vercel 함수 연결) =====
+  (function(){
+    var API = ""; // ← Vercel 배포 후 여기에 "https://<프로젝트>.vercel.app/api/insider" 입력
+    var sel = document.getElementById('insTicker');
+    if (!sel) return;
+    var statusEl = document.getElementById('insStatus');
+    var chart = document.getElementById('insChart');
+    function money(n){ var a=Math.abs(n), sg=n<0?'−':'+'; if(a>=1e6) return sg+'$'+(a/1e6).toFixed(1)+'M'; if(a>=1e3) return sg+'$'+(a/1e3).toFixed(0)+'K'; return sg+'$'+a; }
+    function render(months){
+      if(!months || !months.length){ chart.innerHTML='<div style="padding:22px;text-align:center;color:#9aa7c4;font-size:13px">최근 12개월 공개시장 내부자 매매 기록이 없습니다.</div>'; return; }
+      var d=months.slice(-12);
+      var W=1000,H=300,L=18,R=18,T=24,B=38,pw=W-L-R,ph=H-T-B;
+      var maxA=Math.max.apply(null,d.map(function(x){return Math.abs(x.net);})); if(maxA<=0)maxA=1;
+      var n=d.length, gap=pw/n, bw=gap*0.6, zero=T+ph/2;
+      function yv(v){ return zero-(v/maxA)*(ph/2); }
+      var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
+      s+='<line x1="'+L+'" y1="'+zero+'" x2="'+(L+pw)+'" y2="'+zero+'" stroke="rgba(255,255,255,.25)"/>';
+      d.forEach(function(x,i){ var cx=L+gap*i+gap/2, y=yv(x.net), h=Math.max(Math.abs(zero-y),1), col=x.net>=0?'#2dd4a7':'#ff6b6b';
+        s+='<rect x="'+(cx-bw/2).toFixed(1)+'" y="'+Math.min(zero,y).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" fill="'+col+'"><title>'+x.ym+' : '+money(x.net)+'</title></rect>';
+        s+='<text x="'+cx.toFixed(1)+'" y="'+(H-12)+'" fill="#9aa7c4" font-size="10.5" text-anchor="middle">'+x.ym.slice(2)+'</text>';
+      });
+      var last=d[d.length-1];
+      s+='<text x="'+L+'" y="15" fill="#9aa7c4" font-size="11.5">최근 '+last.ym+': <tspan fill="'+(last.net>=0?'#2dd4a7':'#ff6b6b')+'" font-weight="800">'+(last.net>=0?'순매수 ':'순매도 ')+money(last.net)+'</tspan></text>';
+      s+='</svg>';
+      chart.innerHTML=s;
+    }
+    function load(sym){
+      if(!API){ statusEl.textContent=''; chart.innerHTML='<div style="padding:22px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브 내부자 차트는 <b style="color:#e8edf7">Vercel 함수 연결 후</b> 표시됩니다.<br>설정 방법: 저장소의 <b style="color:#e8edf7">VERCEL_SETUP.md</b></div>'; return; }
+      statusEl.textContent='불러오는 중…';
+      fetch(API+'?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();}).then(function(j){ statusEl.textContent=''; render(j.months||[]); }).catch(function(){ statusEl.textContent=''; chart.innerHTML='<div style="padding:22px;text-align:center;color:#ff6b6b;font-size:13px">데이터를 불러오지 못했습니다. (Vercel 함수/키 확인)</div>'; });
+    }
+    sel.addEventListener('change', function(){ load(sel.value); });
+    load(sel.value);
   })();
 </script>
 </body>
