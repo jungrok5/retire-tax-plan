@@ -24,14 +24,16 @@ jobs:
 
       - name: Fetch FRED & build hy-data.json
         run: |
-          for i in 1 2 3 4 5; do
-            curl -sS -m 40 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36" \
-              "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2" -o hy.csv && \
-              grep -q ',' hy.csv && head -1 hy.csv | grep -qi 'BAMLH0A0HYM2\|DATE\|observation' && break
-            echo "retry $i"; sleep $((i*5))
-          done
+          # FRED는 HTTP/2에서 'stream not closed cleanly(92)'가 잦아 --http1.1 강제.
+          # curl 자체 재시도, 실패해도 스텝은 죽이지 않음(|| true) → 기존 파일 유지.
+          curl --http1.1 --compressed -fsS -m 60 --retry 6 --retry-delay 5 --retry-all-errors \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36" \
+            -H "Accept: text/csv,text/plain,*/*" \
+            "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2" -o hy.csv || echo "::warning::FRED fetch failed"
           python3 - <<'PY'
-          import csv, io, json, datetime, sys
+          import csv, io, json, datetime, os, sys
+          if not os.path.exists('hy.csv'):
+              print("no hy.csv -> keep existing hy-data.json"); sys.exit(0)
           text=open('hy.csv',encoding='utf-8',errors='ignore').read()
           month={}; latest=None
           for row in csv.reader(io.StringIO(text)):
@@ -41,7 +43,7 @@ jobs:
               month[row[0][:7]]=val; latest={"date":row[0],"value":val}
           monthly=[[k,month[k]] for k in sorted(month)]
           if len(monthly) < 6 or not latest:
-              print("FRED fetch looked empty; keeping existing hy-data.json"); sys.exit(0)
+              print("FRED looked empty -> keep existing"); sys.exit(0)
           json.dump({"monthly":monthly,"latest":latest,"updated":datetime.datetime.utcnow().isoformat()+"Z"},
                     open("hy-data.json","w"))
           print("wrote", len(monthly), "months, latest", latest)
