@@ -986,16 +986,18 @@
       <div class="tabs" id="miTabs" style="margin:12px 0 10px">
         <button class="tab-btn active" data-v="cluster-sells">집중매도(Cluster)</button>
         <button class="tab-btn" data-v="top-sales-week">이번 주 최대 매도</button>
+        <button class="tab-btn" id="miExecOnly" style="margin-left:auto">🔴 경영진만</button>
         <span id="miStatus" style="font-size:12px;color:var(--muted);align-self:center"></span>
       </div>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;margin-bottom:8px">
-        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#ff6b6b;vertical-align:-1px"></span> <b>경영진</b>(CEO·CFO·이사) — 신호 강 🔴</span>
-        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#7b8aa6;vertical-align:-1px"></span> <b>대주주·PE</b>(10%) — 구조적, 신호 약 ⬜</span>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;margin-bottom:8px">
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#ff6b6b;vertical-align:-1px"></span> <b>C레벨</b>(CEO·CFO) 신호 강</span>
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#ffa552;vertical-align:-1px"></span> <b>이사 등 경영진</b></span>
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#7b8aa6;vertical-align:-1px"></span> <b>대주주·PE</b>(10%) 신호 약</span>
       </div>
       <div class="chart-box" style="padding:10px 8px"><div id="miChart"></div></div>
       <div class="chart-cap"><span id="miSummary">매도 금액 Top · 데이터: OpenInsider(SEC Form 4)</span><a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" id="miSrc">원본 표 →</a></div>
       <div class="note-box" style="margin-top:12px; font-size:13px; border-color:rgba(255,165,82,.4)">
-        💡 <b>읽는 법</b> — <b style="color:#ff8c8c">빨강(경영진)</b>이 진짜 신호입니다. CEO·CFO·이사가 <b>자기 회사를</b> 크게 팔면 의미가 있어요. <b style="color:#9fb0cc">회색(10%)</b>은 사모펀드·대주주·창업가문의 <b>락업 해제·포트폴리오 청산</b>이라 시장 심리와는 거리가 멉니다(예: 상장 직후 PE 매도). → <b>빨강 막대의 개수·크기가 평소보다 갑자기 커지는지</b>를 보세요.
+        💡 <b>읽는 법</b> — <b style="color:#ff8c8c">빨강(C레벨 CEO·CFO)</b>·<b style="color:#ffc08a">주황(이사 등 경영진)</b>이 진짜 신호입니다. 자기 회사를 잘 아는 사람이 크게 팔면 의미가 있어요. <b style="color:#9fb0cc">회색(10%)</b>은 사모펀드·대주주·창업가문의 <b>락업 해제·포트폴리오 청산</b>이라 시장 심리와는 거리가 멉니다(예: 상장 직후 PE 매도). → 위 <b>'🔴 경영진만'</b> 버튼으로 회색을 걸러내고, <b>빨강·주황이 평소보다 갑자기 많아지는지</b>를 보세요.
       </div>
     </div>
 
@@ -1242,42 +1244,49 @@
     if(!miChart) return;
     var API_MI=(location.hostname.indexOf('github.io')>=0)?'':'/api/market-insider';
     var miStatus=document.getElementById('miStatus'), miSrc=document.getElementById('miSrc'), miSummary=document.getElementById('miSummary');
-    var tabs=document.querySelectorAll('#miTabs .tab-btn');
+    var viewTabs=document.querySelectorAll('#miTabs .tab-btn[data-v]');
+    var execBtn=document.getElementById('miExecOnly');
+    var lastRows=[], execOnly=false;
     function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
     function miMoney(n){var a=Math.abs(n),s='−$';if(a>=1e9)return s+(a/1e9).toFixed(1)+'B';if(a>=1e6)return s+(a/1e6).toFixed(0)+'M';if(a>=1e3)return s+(a/1e3).toFixed(0)+'K';return s+a;}
     function fmtTime(iso){try{return new Date(iso).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+    function colorOf(cat){return cat==='major'?'#7b8aa6':(cat==='clevel'?'#ff6b6b':'#ffa552');}
+    function vColorOf(cat){return cat==='major'?'#9fb0cc':(cat==='clevel'?'#ff8c8c':'#ffc08a');}
     function renderMI(rows){
-      if(!rows||!rows.length){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">데이터가 없습니다.</div>'; return; }
-      var d=rows.slice(0,12), W=1000, rowH=30, top=8, Lx=148, valW=92, pad=10;
-      var barMax=W-Lx-valW-pad, H=top*2+d.length*rowH;
-      var maxA=Math.max.apply(null,d.map(function(x){return Math.abs(x.value);}))||1;
-      var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
+      // 전체 건수(요약용)
       var nExec=0, nMajor=0, sumExec=0;
-      d.forEach(function(x,i){
-        var cy=top+i*rowH+rowH/2, len=Math.max(Math.abs(x.value)/maxA*barMax,2);
-        var tt=x.title?(' · '+x.title):'';
-        var exec = x.cat!=='major';
-        var barCol = exec ? '#ff6b6b' : '#7b8aa6';
-        var valCol = exec ? '#ff8c8c' : '#9fb0cc';
-        if(exec){ nExec++; sumExec+=Math.abs(x.value); } else nMajor++;
-        s+='<text x="2" y="'+(cy+4)+'" fill="#e8edf7" font-size="12.5" font-weight="800">'+esc(x.ticker)+'<tspan fill="#9aa7c4" font-weight="600" font-size="11">'+esc(tt)+'</tspan></text>';
-        s+='<rect x="'+Lx+'" y="'+(cy-8)+'" width="'+len.toFixed(1)+'" height="16" rx="3" fill="'+barCol+'" opacity="0.9"><title>'+esc(x.company)+' · '+esc(x.type)+' · '+esc(x.date)+'</title></rect>';
-        s+='<text x="'+(W-4)+'" y="'+(cy+4)+'" fill="'+valCol+'" font-size="12" font-weight="700" text-anchor="end">'+miMoney(x.value)+'</text>';
-      });
-      s+='</svg>';
-      miChart.innerHTML=s;
-      if(miSummary){ miSummary.innerHTML='이 화면: <b style="color:#ff8c8c">경영진 '+nExec+'건('+miMoney(-sumExec).replace('−','')+')</b> · <b style="color:#9fb0cc">대주주·PE '+nMajor+'건</b>'; }
+      rows.forEach(function(r){ if(r.cat!=='major'){nExec++; sumExec+=Math.abs(r.value);} else nMajor++; });
+      var src = execOnly ? rows.filter(function(r){return r.cat!=='major';}) : rows;
+      if(!src.length){
+        miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">'+(execOnly?'지금은 경영진(빨강·주황) 매도가 없습니다. → 좋은 신호.':'데이터가 없습니다.')+'</div>';
+      } else {
+        var d=src.slice(0,12), W=1000, rowH=30, top=8, Lx=148, valW=92, pad=10;
+        var barMax=W-Lx-valW-pad, H=top*2+d.length*rowH;
+        var maxA=Math.max.apply(null,d.map(function(x){return Math.abs(x.value);}))||1;
+        var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
+        d.forEach(function(x,i){
+          var cy=top+i*rowH+rowH/2, len=Math.max(Math.abs(x.value)/maxA*barMax,2);
+          var tt=x.title?(' · '+x.title):'';
+          s+='<text x="2" y="'+(cy+4)+'" fill="#e8edf7" font-size="12.5" font-weight="800">'+esc(x.ticker)+'<tspan fill="#9aa7c4" font-weight="600" font-size="11">'+esc(tt)+'</tspan></text>';
+          s+='<rect x="'+Lx+'" y="'+(cy-8)+'" width="'+len.toFixed(1)+'" height="16" rx="3" fill="'+colorOf(x.cat)+'" opacity="0.9"><title>'+esc(x.company)+' · '+esc(x.type)+' · '+esc(x.date)+'</title></rect>';
+          s+='<text x="'+(W-4)+'" y="'+(cy+4)+'" fill="'+vColorOf(x.cat)+'" font-size="12" font-weight="700" text-anchor="end">'+miMoney(x.value)+'</text>';
+        });
+        s+='</svg>';
+        miChart.innerHTML=s;
+      }
+      if(miSummary){ miSummary.innerHTML='<b style="color:#ff8c8c">경영진 '+nExec+'건('+miMoney(-sumExec).replace('−','')+')</b> · <b style="color:#9fb0cc">대주주·PE '+nMajor+'건</b>'+(execOnly?' · <span style="color:#ff8c8c">경영진만</span>':''); }
     }
     function loadMI(view){
       if(!API_MI){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브는 Vercel 배포에서 표시됩니다.</div>'; return; }
       miStatus.textContent='불러오는 중…';
       fetch(API_MI+'?view='+view).then(function(r){return r.json();}).then(function(j){
-        renderMI(j.rows||[]);
+        lastRows=j.rows||[]; renderMI(lastRows);
         miStatus.textContent = j.updated ? ('기준 '+fmtTime(j.updated)+(j.stale?' (이전)':'')) : '';
         if(miSrc) miSrc.href = (view==='top-sales-week') ? 'http://openinsider.com/top-insider-sales-of-the-week' : 'http://openinsider.com/latest-cluster-sells';
       }).catch(function(){ miStatus.textContent=''; miChart.innerHTML='<div style="padding:18px;text-align:center;color:#ff6b6b;font-size:13px">불러오지 못했습니다.</div>'; });
     }
-    tabs.forEach(function(b){ b.addEventListener('click', function(){ tabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); loadMI(b.getAttribute('data-v')); }); });
+    viewTabs.forEach(function(b){ b.addEventListener('click', function(){ viewTabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); loadMI(b.getAttribute('data-v')); }); });
+    if(execBtn){ execBtn.addEventListener('click', function(){ execOnly=!execOnly; execBtn.classList.toggle('active',execOnly); renderMI(lastRows); }); }
     loadMI('cluster-sells');
   })();
 </script>
