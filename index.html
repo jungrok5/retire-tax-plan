@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>궁극의 노후 절세 마스터플랜 · 2026 검증판</title>
 <meta name="description" content="연금·ISA·미장 직투를 활용한 노후 절세 통합 플랜. 나이별·투자금 규모별·시간 흐름별 액션을 한눈에." />
+<!-- Open Graph / 공유 카드 -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="궁극의 노후 절세 마스터플랜 · 2026 검증판" />
+<meta property="og:description" content="연금 900 → ISA 2,000 → 미장 직투. 나이별·투자금별·시간 흐름별 절세 액션을 한눈에. 2025~2026 개정세법 반영." />
+<meta property="og:image" content="https://jungrok5.github.io/retire-tax-plan/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://jungrok5.github.io/retire-tax-plan/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="궁극의 노후 절세 마스터플랜 · 2026 검증판" />
+<meta name="twitter:description" content="연금·ISA·미장 직투 통합 절세 전략을 한눈에." />
+<meta name="twitter:image" content="https://jungrok5.github.io/retire-tax-plan/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" />
@@ -171,6 +183,43 @@
   .smini p { margin:0; font-size:14.5px; color:var(--muted); }
   .smini b { color:var(--text); }
 
+  /* SIMULATOR */
+  .sim { display:grid; grid-template-columns: 360px 1fr; gap:20px; }
+  @media (max-width:880px){ .sim { grid-template-columns:1fr; } }
+  .sim-form { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); }
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-size:13.5px; font-weight:700; color:var(--muted); margin-bottom:7px; }
+  .field input[type=number] {
+    width:100%; background:var(--bg-soft); border:1px solid var(--line); color:var(--text);
+    border-radius:11px; padding:11px 13px; font-size:15px; font-family:inherit; font-variant-numeric:tabular-nums;
+  }
+  .field input:focus { outline:none; border-color:var(--brand); }
+  .seg { display:flex; gap:8px; }
+  .seg button {
+    flex:1; background:var(--bg-soft); border:1px solid var(--line); color:var(--muted);
+    padding:10px; border-radius:11px; font-weight:700; font-family:inherit; cursor:pointer; font-size:14px; transition:.15s;
+  }
+  .seg button.on { background:linear-gradient(100deg,var(--brand),var(--brand-2)); color:#fff; border-color:transparent; }
+  .hint { font-size:12.5px; color:var(--muted); margin-top:6px; }
+  .sim-out { display:grid; gap:14px; align-content:start; }
+  .bars { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
+  .bar-row { margin:0 0 14px; }
+  .bar-row:last-child { margin-bottom:0; }
+  .bar-top { display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; }
+  .bar-top .lab { font-weight:700; }
+  .bar-top .val { color:var(--gold); font-weight:800; font-variant-numeric:tabular-nums; }
+  .bar-track { height:14px; background:var(--bg-soft); border-radius:999px; overflow:hidden; border:1px solid var(--line); }
+  .bar-fill { height:100%; border-radius:999px; transition:width .4s ease; }
+  .bf-1 { background:var(--green); } .bf-2 { background:var(--brand); } .bf-3 { background:var(--brand-2); }
+  .kpis { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 16px; }
+  .kpi .k { font-size:12.5px; color:var(--muted); font-weight:700; }
+  .kpi .v { font-size:22px; font-weight:850; margin-top:3px; font-variant-numeric:tabular-nums; }
+  .kpi .v.gold { color:var(--gold); } .kpi .v.green { color:var(--green); }
+  .kpi .s { font-size:12px; color:var(--muted); margin-top:2px; }
+  .note-box { background:var(--card-2); border:1px solid var(--line); border-radius:14px; padding:14px 16px; font-size:13.5px; color:var(--muted); }
+  .note-box b { color:var(--text); }
+
   /* footer */
   footer { border-top:1px solid var(--line); padding:34px 0 60px; color:var(--muted); font-size:13.5px; }
   .disclaim { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13.5px; color:var(--muted); }
@@ -192,6 +241,7 @@
     <div class="logo">💰 노후 절세 <span>마스터플랜</span></div>
     <div class="links">
       <a href="#overview">한눈에</a>
+      <a href="#simulator">시뮬레이터</a>
       <a href="#day0">0단계</a>
       <a href="#waterfall">폭포수</a>
       <a href="#byage">나이별</a>
@@ -246,6 +296,64 @@
         <h3><span class="ico">🌾</span> 현금흐름 수확</h3>
         <span class="tag g">은퇴 수확기</span>
         <p>'소득의 꼬리표'를 바꿔치기하며 <b>초저율(3.3~5.5%)</b>로 빼 씁니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIMULATOR -->
+<section id="simulator">
+  <div class="wrap">
+    <div class="eyebrow">Interactive</div>
+    <h2 class="sec">🧮 내 상황 시뮬레이터</h2>
+    <p class="sec-sub">내 나이와 올해 투자 가능 금액을 넣으면 <b style="color:var(--text)">폭포수 배분</b>과 <b style="color:var(--text)">예상 세액공제 환급액</b>, 나이에 맞는 행동을 즉시 계산합니다.</p>
+    <div class="sim">
+      <div class="sim-form">
+        <div class="field">
+          <label>본인 나이</label>
+          <input type="number" id="age" value="45" min="0" max="120" />
+        </div>
+        <div class="field">
+          <label>가구 형태</label>
+          <div class="seg" id="household">
+            <button data-v="single">1인</button>
+            <button data-v="couple" class="on">맞벌이 부부</button>
+          </div>
+          <div class="hint">부부는 인별 과세라 한도가 2배(연금 1,800 · ISA 4,000만 원)로 확장됩니다.</div>
+        </div>
+        <div class="field">
+          <label>올해 투자 가능 금액 (만원)</label>
+          <input type="number" id="invest" value="5000" min="0" step="100" />
+        </div>
+        <div class="field">
+          <label>세액공제율 구간</label>
+          <div class="seg" id="rate">
+            <button data-v="16.5" class="on">총급여 5,500만↓ (16.5%)</button>
+            <button data-v="13.2">초과 (13.2%)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-out">
+        <div class="bars">
+          <div class="bar-row">
+            <div class="bar-top"><span class="lab">① 연금저축 + IRP</span><span class="val" id="vPension">–</span></div>
+            <div class="bar-track"><div class="bar-fill bf-1" id="bPension" style="width:0"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="lab">② 중개형 ISA</span><span class="val" id="vIsa">–</span></div>
+            <div class="bar-track"><div class="bar-fill bf-2" id="bIsa" style="width:0"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="lab">③ 미국 주식 직투</span><span class="val" id="vDirect">–</span></div>
+            <div class="bar-track"><div class="bar-fill bf-3" id="bDirect" style="width:0"></div></div>
+          </div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">예상 세액공제 환급</div><div class="v gold" id="kRefund">–</div><div class="s">연금 납입분 × 공제율</div></div>
+          <div class="kpi"><div class="k">건보료 안전 배당 한도</div><div class="v green" id="kDiv">–</div><div class="s">일반계좌 세전 / 1인 999만</div></div>
+        </div>
+        <div class="note-box" id="ageNote"></div>
       </div>
     </div>
   </div>
@@ -625,6 +733,58 @@
 </footer>
 
 <script>
+  // ===== 시뮬레이터 =====
+  var state = { household: 'couple', rate: 16.5 };
+  function won(manwon){ // 만원 -> 보기 좋은 문자열
+    if (manwon >= 10000) return (manwon/10000).toLocaleString('ko-KR',{maximumFractionDigits:2}) + '억';
+    return Math.round(manwon).toLocaleString('ko-KR') + '만';
+  }
+  function ageAdvice(age){
+    if (age < 40) return '<b>~39세 · 가속기:</b> 오늘 연금 1만 원으로 5년 타이머를 켜고, 폭포수 1·2순위를 전액 주식형으로 공격적으로 운용하세요. 환급금까지 재투자하면 복리 효과가 극대화됩니다.';
+    if (age < 55) return '<b>40~54세 · 축적·방어기:</b> 매년 폭포수를 꽉 채우고 부부 명의로 분산하세요. 일반계좌 배당은 1인 999만 원 이내로 세팅하고, ISA 3년 만기마다 연금계좌로 환승(풍차돌리기)을 준비합니다.';
+    if (age < 70) return '<b>55~69세 · 수확기 진입:</b> 연금 수령 요건(5년+55세) 충족 시 <b>연금소득세 5.5%</b>로 수령 시작. 단, 사적연금 합계는 <b>연 1,500만 원(월 약 125만)</b> 이내로 조절해야 저율 분리과세가 유지됩니다.';
+    if (age < 80) return '<b>70~79세:</b> 연금소득세가 <b>4.4%</b>로 하락. 수령 비중을 이 구간에 더 실어도 좋습니다. 큰돈은 미장 매도(22% 분리과세)로 충당하면 건보료 영향이 없습니다.';
+    return '<b>80세 이상:</b> 연금소득세 <b>3.3%</b>로 최저 구간. 사적연금이라 건보료 산정에도 반영되지 않습니다.';
+  }
+  function calc(){
+    var age = parseFloat(document.getElementById('age').value) || 0;
+    var invest = parseFloat(document.getElementById('invest').value) || 0;
+    var couple = state.household === 'couple';
+    var pensionLimit = couple ? 1800 : 900;   // 세액공제 한도 (만원)
+    var isaLimit = couple ? 4000 : 2000;       // ISA 연 납입 (만원)
+    var divLimit = couple ? 1998 : 999;        // 건보료 안전 배당 (만원)
+
+    var pension = Math.min(invest, pensionLimit);
+    var isa = Math.min(Math.max(invest - pension, 0), isaLimit);
+    var direct = Math.max(invest - pension - isa, 0);
+    var refund = pension * (state.rate/100);
+
+    var max = Math.max(invest, 1);
+    document.getElementById('vPension').textContent = won(pension) + '원';
+    document.getElementById('vIsa').textContent = won(isa) + '원';
+    document.getElementById('vDirect').textContent = won(direct) + '원';
+    document.getElementById('bPension').style.width = (pension/max*100) + '%';
+    document.getElementById('bIsa').style.width = (isa/max*100) + '%';
+    document.getElementById('bDirect').style.width = (direct/max*100) + '%';
+    document.getElementById('kRefund').textContent = won(refund) + '원';
+    document.getElementById('kDiv').textContent = won(divLimit) + '원';
+    document.getElementById('ageNote').innerHTML = ageAdvice(age);
+  }
+  document.querySelectorAll('#household button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('#household button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); state.household = b.getAttribute('data-v'); calc();
+    });
+  });
+  document.querySelectorAll('#rate button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('#rate button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); state.rate = parseFloat(b.getAttribute('data-v')); calc();
+    });
+  });
+  ['age','invest'].forEach(function(id){ document.getElementById(id).addEventListener('input', calc); });
+  calc();
+
   // 투자금 규모별 탭
   document.querySelectorAll('#moneyTabs .tab-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
