@@ -48,8 +48,10 @@ function parseRows(html) {
     const value = parseInt((cells[ci.value] || "").replace(/[^0-9-]/g, ""), 10);
     if (!ticker || isNaN(value)) continue;
     const title = cells[ci.title] || "";
-    // 분류: 10%(대주주/PE/창업가문) = 'major'(신호 약), 그 외(CEO/CFO/Dir 등) = 'exec'(신호 강)
-    const cat = /10%/.test(title) ? "major" : "exec";
+    // 분류: 10%(대주주/PE/창업가문)=major(신호 약) / C레벨(CEO·CFO 등)=clevel(신호 강) / 이사 등=dir
+    const cat = /10%/.test(title) ? "major"
+      : /\b(CEO|CFO|COO|CAO|CTO|CMO|Pres|President|Chief|Officer)\b/i.test(title) ? "clevel"
+      : "dir";
     rows.push({
       ticker,
       company: cells[ci.company] || "",
