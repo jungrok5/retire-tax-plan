@@ -1,0 +1,57 @@
+name: Update HY spread data
+
+# 하이일드 스프레드(FRED)를 매일 받아 hy-data.json으로 커밋.
+# GitHub 러너는 FRED 접속이 되므로(Vercel은 막힘) 여기서 받아 정적 파일로 제공.
+# 사용자 요청 때마다 FRED를 치지 않으니 레이트리밋 0.
+
+on:
+  schedule:
+    - cron: '0 13 * * *'   # 매일 13:00 UTC (22:00 KST) 1회
+  workflow_dispatch:        # 수동 실행 가능
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-hy
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch FRED & build hy-data.json
+        run: |
+          for i in 1 2 3 4 5; do
+            curl -sS -m 40 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36" \
+              "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2" -o hy.csv && \
+              grep -q ',' hy.csv && head -1 hy.csv | grep -qi 'BAMLH0A0HYM2\|DATE\|observation' && break
+            echo "retry $i"; sleep $((i*5))
+          done
+          python3 - <<'PY'
+          import csv, io, json, datetime, sys
+          text=open('hy.csv',encoding='utf-8',errors='ignore').read()
+          month={}; latest=None
+          for row in csv.reader(io.StringIO(text)):
+              if len(row)<2 or not row[0][:4].isdigit(): continue
+              try: val=float(row[1])
+              except: continue
+              month[row[0][:7]]=val; latest={"date":row[0],"value":val}
+          monthly=[[k,month[k]] for k in sorted(month)]
+          if len(monthly) < 6 or not latest:
+              print("FRED fetch looked empty; keeping existing hy-data.json"); sys.exit(0)
+          json.dump({"monthly":monthly,"latest":latest,"updated":datetime.datetime.utcnow().isoformat()+"Z"},
+                    open("hy-data.json","w"))
+          print("wrote", len(monthly), "months, latest", latest)
+          PY
+          rm -f hy.csv
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hy-data.json
+          git diff --staged --quiet || git commit -m "chore: update HY spread data [skip ci]"
+          git push
