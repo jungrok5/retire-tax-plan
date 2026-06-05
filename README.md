@@ -33,10 +33,9 @@ python3 -m http.server 8000   # http://localhost:8000
 
 ## 배포 (Vercel)
 
-정적 사이트 + 서버리스 함수(`api/insider.js`)라 Vercel에 import 하면 한 번에 배포됩니다.
-**`main` 브랜치에 push하면 자동 재배포**됩니다. 자세한 단계와 내부자 라이브 차트용
-Finnhub 키 설정은 **[`VERCEL_SETUP.md`](./VERCEL_SETUP.md)** 참고.
+정적 사이트 + 서버리스 함수(`api/market-insider.js`)라 Vercel에 import 하면 한 번에 배포됩니다.
+**`main` 브랜치에 push하면 자동 재배포**됩니다. 자세한 단계는 **[`VERCEL_SETUP.md`](./VERCEL_SETUP.md)** 참고.
 
-- 라이브 내부자 차트는 환경변수 `FINNHUB_KEY`가 설정돼야 작동합니다(키는 Vercel 서버에만 저장, 코드/깃 노출 X).
+- 라이브 '시장 전체 내부자 매도' 차트는 OpenInsider(SEC Form 4) 기반이라 **API 키가 필요 없습니다**.
 
 > ⚠️ **면책:** 교육용 요약이며 투자·세무 자문이 아닙니다. 실행 전 세무사·금융 전문가와 본인 상황을 확인하세요.
