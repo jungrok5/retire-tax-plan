@@ -995,12 +995,16 @@
       <div class="note-box" style="margin-top:12px; font-size:13px; border-color:rgba(255,165,82,.4)">
         💡 <b>'빨강' 자체에 놀라지 마세요.</b> 대형 기술주 임원은 스톡옵션 보상 때문에 <b>평상시에도 순매도(빨강)가 정상</b>입니다. 봐야 할 건 색이 아니라 <b>변화</b> — 평소보다 <b>매도 규모가 급증</b>하거나, 가끔 보이던 <b>매수(P·초록)가 완전히 사라지는</b> 흐름입니다.
       </div>
-      <div class="note-box" style="margin-top:10px; font-size:13px">
-        🔎 <b>시장 전체의 '집중매도'</b>(여러 종목에서 임원들이 동시에 파는 흐름)는 OpenInsider에서 — 표의 <b>Trade Type=S(매도)</b> · <b>Value(금액)</b> · <b>Title=CEO·CFO</b>가 핵심 포인트.
-        <div style="margin-top:9px; display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">집중매도(Cluster Sells) →</a>
-          <a href="http://openinsider.com/top-insider-sales-of-the-week" target="_blank" rel="noopener" style="background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:#9cb8ff;font-weight:700;text-decoration:none;font-size:13px">이번 주 최대 매도 →</a>
+      <div style="margin-top:18px; border-top:1px dashed var(--line); padding-top:16px;">
+        <h4 style="margin:0 0 4px; font-size:16px;">🔎 시장 전체 매도 순위 (라이브)</h4>
+        <p class="sub" style="margin:0 0 10px">여러 종목에서 임원·대주주가 파는 흐름을 금액순으로. <b style="color:var(--muted)">Title이 CEO/CFO/Dir이면 경영진 신호, 10%면 대주주·PE 청산</b>(신호 강도가 다릅니다).</p>
+        <div class="tabs" id="miTabs" style="margin-bottom:10px">
+          <button class="tab-btn active" data-v="cluster-sells">집중매도(Cluster)</button>
+          <button class="tab-btn" data-v="top-sales-week">이번 주 최대 매도</button>
+          <span id="miStatus" style="font-size:12px;color:var(--muted);align-self:center"></span>
         </div>
+        <div class="chart-box" style="padding:10px 8px"><div id="miChart"></div></div>
+        <div class="chart-cap"><span>매도 금액 Top · <b style="color:var(--red)">빨강=매도($)</b> · 데이터: OpenInsider(SEC Form 4)</span><a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" id="miSrc">원본 표 →</a></div>
       </div>
     </div>
 
@@ -1275,6 +1279,43 @@
     }
     sel.addEventListener('change', function(){ load(sel.value); });
     load(sel.value);
+  })();
+
+  // ===== 시장 전체 매도 차트 (OpenInsider via Vercel) =====
+  (function(){
+    var miChart=document.getElementById('miChart');
+    if(!miChart) return;
+    var API_MI=(location.hostname.indexOf('github.io')>=0)?'':'/api/market-insider';
+    var miStatus=document.getElementById('miStatus'), miSrc=document.getElementById('miSrc');
+    var tabs=document.querySelectorAll('#miTabs .tab-btn');
+    function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function miMoney(n){var a=Math.abs(n),s='−$';if(a>=1e9)return s+(a/1e9).toFixed(1)+'B';if(a>=1e6)return s+(a/1e6).toFixed(0)+'M';if(a>=1e3)return s+(a/1e3).toFixed(0)+'K';return s+a;}
+    function renderMI(rows){
+      if(!rows||!rows.length){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">데이터가 없습니다.</div>'; return; }
+      var d=rows.slice(0,12), W=1000, rowH=30, top=8, Lx=148, valW=92, pad=10;
+      var barMax=W-Lx-valW-pad, H=top*2+d.length*rowH;
+      var maxA=Math.max.apply(null,d.map(function(x){return Math.abs(x.value);}))||1;
+      var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
+      d.forEach(function(x,i){
+        var cy=top+i*rowH+rowH/2, len=Math.max(Math.abs(x.value)/maxA*barMax,2);
+        var tt=x.title?(' · '+x.title):'';
+        s+='<text x="2" y="'+(cy+4)+'" fill="#e8edf7" font-size="12.5" font-weight="800">'+esc(x.ticker)+'<tspan fill="#9aa7c4" font-weight="600" font-size="11">'+esc(tt)+'</tspan></text>';
+        s+='<rect x="'+Lx+'" y="'+(cy-8)+'" width="'+len.toFixed(1)+'" height="16" rx="3" fill="#ff6b6b" opacity="0.85"><title>'+esc(x.company)+' · '+esc(x.type)+' · '+esc(x.date)+'</title></rect>';
+        s+='<text x="'+(W-4)+'" y="'+(cy+4)+'" fill="#ff8c8c" font-size="12" font-weight="700" text-anchor="end">'+miMoney(x.value)+'</text>';
+      });
+      s+='</svg>';
+      miChart.innerHTML=s;
+    }
+    function loadMI(view){
+      if(!API_MI){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브는 Vercel 배포에서 표시됩니다.</div>'; return; }
+      miStatus.textContent='불러오는 중…';
+      fetch(API_MI+'?view='+view).then(function(r){return r.json();}).then(function(j){
+        miStatus.textContent=''; renderMI(j.rows||[]);
+        if(miSrc) miSrc.href = (view==='top-sales-week') ? 'http://openinsider.com/top-insider-sales-of-the-week' : 'http://openinsider.com/latest-cluster-sells';
+      }).catch(function(){ miStatus.textContent=''; miChart.innerHTML='<div style="padding:18px;text-align:center;color:#ff6b6b;font-size:13px">불러오지 못했습니다.</div>'; });
+    }
+    tabs.forEach(function(b){ b.addEventListener('click', function(){ tabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); loadMI(b.getAttribute('data-v')); }); });
+    loadMI('cluster-sells');
   })();
 </script>
 </body>
