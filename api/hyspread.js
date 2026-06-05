@@ -24,11 +24,24 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const r = await fetch("https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2", {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; retire-tax-plan/1.0)" },
-    });
-    if (!r.ok) throw new Error("upstream_" + r.status);
-    const text = await r.text();
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000); // 8초 내 응답 없으면 중단(행 방지)
+    let text;
+    try {
+      const r = await fetch("https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2", {
+        signal: ctrl.signal,
+        redirect: "follow",
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+          "Accept": "text/csv,text/plain,*/*",
+          "Accept-Language": "en-US,en;q=0.9",
+        },
+      });
+      if (!r.ok) throw new Error("upstream_" + r.status);
+      text = await r.text();
+    } finally {
+      clearTimeout(timer);
+    }
 
     const month = {};
     let latest = null;
