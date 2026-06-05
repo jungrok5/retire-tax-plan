@@ -988,8 +988,15 @@
         <button class="tab-btn" data-v="top-sales-week">이번 주 최대 매도</button>
         <span id="miStatus" style="font-size:12px;color:var(--muted);align-self:center"></span>
       </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;margin-bottom:8px">
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#ff6b6b;vertical-align:-1px"></span> <b>경영진</b>(CEO·CFO·이사) — 신호 강 🔴</span>
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#7b8aa6;vertical-align:-1px"></span> <b>대주주·PE</b>(10%) — 구조적, 신호 약 ⬜</span>
+      </div>
       <div class="chart-box" style="padding:10px 8px"><div id="miChart"></div></div>
-      <div class="chart-cap"><span>매도 금액 Top · <b style="color:var(--red)">빨강=매도($)</b> · 데이터: OpenInsider(SEC Form 4)</span><a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" id="miSrc">원본 표 →</a></div>
+      <div class="chart-cap"><span id="miSummary">매도 금액 Top · 데이터: OpenInsider(SEC Form 4)</span><a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" id="miSrc">원본 표 →</a></div>
+      <div class="note-box" style="margin-top:12px; font-size:13px; border-color:rgba(255,165,82,.4)">
+        💡 <b>읽는 법</b> — <b style="color:#ff8c8c">빨강(경영진)</b>이 진짜 신호입니다. CEO·CFO·이사가 <b>자기 회사를</b> 크게 팔면 의미가 있어요. <b style="color:#9fb0cc">회색(10%)</b>은 사모펀드·대주주·창업가문의 <b>락업 해제·포트폴리오 청산</b>이라 시장 심리와는 거리가 멉니다(예: 상장 직후 PE 매도). → <b>빨강 막대의 개수·크기가 평소보다 갑자기 커지는지</b>를 보세요.
+      </div>
     </div>
 
     <h3 style="font-size:20px; margin:30px 0 14px; letter-spacing:-.3px;">③ 🛡️ 절세계좌 방어 리밸런싱</h3>
@@ -1234,7 +1241,7 @@
     var miChart=document.getElementById('miChart');
     if(!miChart) return;
     var API_MI=(location.hostname.indexOf('github.io')>=0)?'':'/api/market-insider';
-    var miStatus=document.getElementById('miStatus'), miSrc=document.getElementById('miSrc');
+    var miStatus=document.getElementById('miStatus'), miSrc=document.getElementById('miSrc'), miSummary=document.getElementById('miSummary');
     var tabs=document.querySelectorAll('#miTabs .tab-btn');
     function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
     function miMoney(n){var a=Math.abs(n),s='−$';if(a>=1e9)return s+(a/1e9).toFixed(1)+'B';if(a>=1e6)return s+(a/1e6).toFixed(0)+'M';if(a>=1e3)return s+(a/1e3).toFixed(0)+'K';return s+a;}
@@ -1245,15 +1252,21 @@
       var barMax=W-Lx-valW-pad, H=top*2+d.length*rowH;
       var maxA=Math.max.apply(null,d.map(function(x){return Math.abs(x.value);}))||1;
       var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
+      var nExec=0, nMajor=0, sumExec=0;
       d.forEach(function(x,i){
         var cy=top+i*rowH+rowH/2, len=Math.max(Math.abs(x.value)/maxA*barMax,2);
         var tt=x.title?(' · '+x.title):'';
+        var exec = x.cat!=='major';
+        var barCol = exec ? '#ff6b6b' : '#7b8aa6';
+        var valCol = exec ? '#ff8c8c' : '#9fb0cc';
+        if(exec){ nExec++; sumExec+=Math.abs(x.value); } else nMajor++;
         s+='<text x="2" y="'+(cy+4)+'" fill="#e8edf7" font-size="12.5" font-weight="800">'+esc(x.ticker)+'<tspan fill="#9aa7c4" font-weight="600" font-size="11">'+esc(tt)+'</tspan></text>';
-        s+='<rect x="'+Lx+'" y="'+(cy-8)+'" width="'+len.toFixed(1)+'" height="16" rx="3" fill="#ff6b6b" opacity="0.85"><title>'+esc(x.company)+' · '+esc(x.type)+' · '+esc(x.date)+'</title></rect>';
-        s+='<text x="'+(W-4)+'" y="'+(cy+4)+'" fill="#ff8c8c" font-size="12" font-weight="700" text-anchor="end">'+miMoney(x.value)+'</text>';
+        s+='<rect x="'+Lx+'" y="'+(cy-8)+'" width="'+len.toFixed(1)+'" height="16" rx="3" fill="'+barCol+'" opacity="0.9"><title>'+esc(x.company)+' · '+esc(x.type)+' · '+esc(x.date)+'</title></rect>';
+        s+='<text x="'+(W-4)+'" y="'+(cy+4)+'" fill="'+valCol+'" font-size="12" font-weight="700" text-anchor="end">'+miMoney(x.value)+'</text>';
       });
       s+='</svg>';
       miChart.innerHTML=s;
+      if(miSummary){ miSummary.innerHTML='이 화면: <b style="color:#ff8c8c">경영진 '+nExec+'건('+miMoney(-sumExec).replace('−','')+')</b> · <b style="color:#9fb0cc">대주주·PE '+nMajor+'건</b>'; }
     }
     function loadMI(view){
       if(!API_MI){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브는 Vercel 배포에서 표시됩니다.</div>'; return; }
