@@ -981,31 +981,15 @@
 
     <div class="sig">
       <h4>3️⃣ 핵심 경영진(내부자) 대규모 매도</h4>
-      <p class="sub">회사의 실제 ROI를 가장 잘 아는 창업자·CEO가 장밋빛 발표 뒤에서 지분을 대량 매도하면 '꼭지'의 전형적 신호입니다. 아래 차트로 <b>종목별 내부자 순매수/순매도</b>를 직접 확인하세요. <span style="color:var(--muted)">(SEC Form 4 = 거래 후 ~2영업일 신고, 월 단위 집계)</span></p>
-      <div class="vs"><span class="ok">정상 ▸ 매수(P)·자사주 매입</span><span class="bad">위험 ▸ 매수 없이 매도(S)만 쏟아짐</span></div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 10px">
-        <label for="insTicker" style="font-size:13px;color:var(--muted);font-weight:700">종목</label>
-        <select id="insTicker" style="background:var(--bg-soft);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 11px;font-family:inherit;font-size:14px;font-weight:700">
-          <option>NVDA</option><option>MSFT</option><option>AVGO</option><option>AMD</option><option>PLTR</option><option>SMCI</option><option>MU</option><option>ORCL</option><option>CRM</option><option>ARM</option><option>DELL</option><option>AAPL</option><option>GOOGL</option><option>AMZN</option><option>META</option><option>TSLA</option>
-        </select>
-        <span id="insStatus" style="font-size:12px;color:var(--muted)"></span>
+      <p class="sub">회사의 실제 ROI를 가장 잘 아는 창업자·CEO·대주주가 장밋빛 발표 뒤에서 지분을 대량 매도하면 '꼭지'의 전형적 신호입니다. 아래는 <b>시장 전체에서 지금 가장 크게 파는 내부자</b>를 금액순으로 보여줍니다. <span style="color:var(--muted)">Title이 <b style="color:var(--text)">CEO·CFO·Dir</b>이면 경영진 신호, <b style="color:var(--text)">10%</b>면 대주주·PE 청산(신호 강도가 다름) · SEC Form 4 기반.</span></p>
+      <div class="vs"><span class="ok">정상 ▸ 매수(P)·자사주 매입 우세</span><span class="bad">위험 ▸ 경영진의 대규모 매도(S) 급증</span></div>
+      <div class="tabs" id="miTabs" style="margin:12px 0 10px">
+        <button class="tab-btn active" data-v="cluster-sells">집중매도(Cluster)</button>
+        <button class="tab-btn" data-v="top-sales-week">이번 주 최대 매도</button>
+        <span id="miStatus" style="font-size:12px;color:var(--muted);align-self:center"></span>
       </div>
-      <div class="chart-box" style="padding:10px 8px 4px"><div id="insChart"></div></div>
-      <div class="chart-cap"><span id="insCap">월별 <b style="color:var(--green)">순매수(초록)</b> / <b style="color:var(--red)">순매도(빨강)</b> · 데이터: Finnhub · SEC Form 4</span></div>
-      <div class="note-box" style="margin-top:12px; font-size:13px; border-color:rgba(255,165,82,.4)">
-        💡 <b>'빨강' 자체에 놀라지 마세요.</b> 대형 기술주 임원은 스톡옵션 보상 때문에 <b>평상시에도 순매도(빨강)가 정상</b>입니다. 봐야 할 건 색이 아니라 <b>변화</b> — 평소보다 <b>매도 규모가 급증</b>하거나, 가끔 보이던 <b>매수(P·초록)가 완전히 사라지는</b> 흐름입니다.
-      </div>
-      <div style="margin-top:18px; border-top:1px dashed var(--line); padding-top:16px;">
-        <h4 style="margin:0 0 4px; font-size:16px;">🔎 시장 전체 매도 순위 (라이브)</h4>
-        <p class="sub" style="margin:0 0 10px">여러 종목에서 임원·대주주가 파는 흐름을 금액순으로. <b style="color:var(--muted)">Title이 CEO/CFO/Dir이면 경영진 신호, 10%면 대주주·PE 청산</b>(신호 강도가 다릅니다).</p>
-        <div class="tabs" id="miTabs" style="margin-bottom:10px">
-          <button class="tab-btn active" data-v="cluster-sells">집중매도(Cluster)</button>
-          <button class="tab-btn" data-v="top-sales-week">이번 주 최대 매도</button>
-          <span id="miStatus" style="font-size:12px;color:var(--muted);align-self:center"></span>
-        </div>
-        <div class="chart-box" style="padding:10px 8px"><div id="miChart"></div></div>
-        <div class="chart-cap"><span>매도 금액 Top · <b style="color:var(--red)">빨강=매도($)</b> · 데이터: OpenInsider(SEC Form 4)</span><a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" id="miSrc">원본 표 →</a></div>
-      </div>
+      <div class="chart-box" style="padding:10px 8px"><div id="miChart"></div></div>
+      <div class="chart-cap"><span>매도 금액 Top · <b style="color:var(--red)">빨강=매도($)</b> · 데이터: OpenInsider(SEC Form 4)</span><a href="http://openinsider.com/latest-cluster-sells" target="_blank" rel="noopener" id="miSrc">원본 표 →</a></div>
     </div>
 
     <h3 style="font-size:20px; margin:30px 0 14px; letter-spacing:-.3px;">③ 🛡️ 절세계좌 방어 리밸런싱</h3>
@@ -1243,42 +1227,6 @@
     s+='<text x="'+(cx-8)+'" y="'+(cy+4)+'" fill="#2dd4a7" font-size="11.5" font-weight="800" text-anchor="end">현재 '+HY[ci][1]+'%</text>';
     s+='</svg>';
     el.innerHTML=s;
-  })();
-
-  // ===== 라이브 내부자 차트 (Vercel 함수 연결) =====
-  (function(){
-    // Vercel(또는 /api 함수가 있는 호스트)에선 자동으로 라이브 작동. 깃허브 페이지스에선 안내문 표시.
-    var API = (location.hostname.indexOf('github.io') >= 0) ? "" : "/api/insider";
-    var sel = document.getElementById('insTicker');
-    if (!sel) return;
-    var statusEl = document.getElementById('insStatus');
-    var chart = document.getElementById('insChart');
-    function money(n){ var a=Math.abs(n), sg=n<0?'−':'+'; if(a>=1e6) return sg+'$'+(a/1e6).toFixed(1)+'M'; if(a>=1e3) return sg+'$'+(a/1e3).toFixed(0)+'K'; return sg+'$'+a; }
-    function render(months){
-      if(!months || !months.length){ chart.innerHTML='<div style="padding:22px;text-align:center;color:#9aa7c4;font-size:13px">최근 12개월 공개시장 내부자 매매 기록이 없습니다.</div>'; return; }
-      var d=months.slice(-12);
-      var W=1000,H=300,L=18,R=18,T=24,B=38,pw=W-L-R,ph=H-T-B;
-      var maxA=Math.max.apply(null,d.map(function(x){return Math.abs(x.net);})); if(maxA<=0)maxA=1;
-      var n=d.length, gap=pw/n, bw=gap*0.6, zero=T+ph/2;
-      function yv(v){ return zero-(v/maxA)*(ph/2); }
-      var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
-      s+='<line x1="'+L+'" y1="'+zero+'" x2="'+(L+pw)+'" y2="'+zero+'" stroke="rgba(255,255,255,.25)"/>';
-      d.forEach(function(x,i){ var cx=L+gap*i+gap/2, y=yv(x.net), h=Math.max(Math.abs(zero-y),1), col=x.net>=0?'#2dd4a7':'#ff6b6b';
-        s+='<rect x="'+(cx-bw/2).toFixed(1)+'" y="'+Math.min(zero,y).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" fill="'+col+'"><title>'+x.ym+' : '+money(x.net)+'</title></rect>';
-        s+='<text x="'+cx.toFixed(1)+'" y="'+(H-12)+'" fill="#9aa7c4" font-size="10.5" text-anchor="middle">'+x.ym.slice(2)+'</text>';
-      });
-      var last=d[d.length-1];
-      s+='<text x="'+L+'" y="15" fill="#9aa7c4" font-size="11.5">최근 '+last.ym+': <tspan fill="'+(last.net>=0?'#2dd4a7':'#ff6b6b')+'" font-weight="800">'+(last.net>=0?'순매수 ':'순매도 ')+money(last.net)+'</tspan></text>';
-      s+='</svg>';
-      chart.innerHTML=s;
-    }
-    function load(sym){
-      if(!API){ statusEl.textContent=''; chart.innerHTML='<div style="padding:22px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브 내부자 차트는 <b style="color:#e8edf7">Vercel 함수 연결 후</b> 표시됩니다.<br>설정 방법: 저장소의 <b style="color:#e8edf7">VERCEL_SETUP.md</b></div>'; return; }
-      statusEl.textContent='불러오는 중…';
-      fetch(API+'?symbol='+encodeURIComponent(sym)).then(function(r){return r.json();}).then(function(j){ statusEl.textContent=''; render(j.months||[]); }).catch(function(){ statusEl.textContent=''; chart.innerHTML='<div style="padding:22px;text-align:center;color:#ff6b6b;font-size:13px">데이터를 불러오지 못했습니다. (Vercel 함수/키 확인)</div>'; });
-    }
-    sel.addEventListener('change', function(){ load(sel.value); });
-    load(sel.value);
   })();
 
   // ===== 시장 전체 매도 차트 (OpenInsider via Vercel) =====
