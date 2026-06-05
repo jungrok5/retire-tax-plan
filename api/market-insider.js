@@ -47,13 +47,17 @@ function parseRows(html) {
     const ticker = tk ? tk[1] : "";
     const value = parseInt((cells[ci.value] || "").replace(/[^0-9-]/g, ""), 10);
     if (!ticker || isNaN(value)) continue;
+    const title = cells[ci.title] || "";
+    // 분류: 10%(대주주/PE/창업가문) = 'major'(신호 약), 그 외(CEO/CFO/Dir 등) = 'exec'(신호 강)
+    const cat = /10%/.test(title) ? "major" : "exec";
     rows.push({
       ticker,
       company: cells[ci.company] || "",
-      title: cells[ci.title] || "",
+      title,
       type: cells[ci.type] || "",
       value,
       date: cells[ci.date] || "",
+      cat,
     });
   }
   rows.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
