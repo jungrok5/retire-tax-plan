@@ -1242,7 +1242,8 @@
 
   // ===== 라이브 내부자 차트 (Vercel 함수 연결) =====
   (function(){
-    var API = ""; // ← Vercel 배포 후 여기에 "https://<프로젝트>.vercel.app/api/insider" 입력
+    // Vercel(또는 /api 함수가 있는 호스트)에선 자동으로 라이브 작동. 깃허브 페이지스에선 안내문 표시.
+    var API = (location.hostname.indexOf('github.io') >= 0) ? "" : "/api/insider";
     var sel = document.getElementById('insTicker');
     if (!sel) return;
     var statusEl = document.getElementById('insStatus');
