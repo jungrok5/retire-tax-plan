@@ -946,10 +946,13 @@
       <h4>1️⃣ 하이일드 신용 스프레드</h4>
       <p class="sub">투기등급 회사채와 국채의 금리차. 가장 먼저 경고하는 곳은 주식이 아니라 <b>채권</b>입니다. capex가 큰 인프라·실적 없는 기업부터 자금경색의 첫 도미노가 됩니다.</p>
       <div class="vs"><span class="ok">정상 ▸ 축소·안정</span><span class="bad">위험 ▸ 바닥에서 V자 급등(자금경색)</span></div>
-      <div class="chart-box light">
-        <img loading="lazy" alt="ICE BofA US High Yield 스프레드 (FRED 라이브)" src="https://fred.stlouisfed.org/graph/fredgraph.png?id=BAMLH0A0HYM2&cosd=2018-01-01&width=1200&height=420" />
+      <div class="chart-box" style="padding:10px 8px 4px;">
+        <div id="hyChart"></div>
       </div>
-      <div class="chart-cap"><span>출처: FRED · ICE BofA US High Yield OAS (매일 자동 갱신)</span><a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">인터랙티브 차트 →</a></div>
+      <div class="chart-cap">
+        <span>월말 기준 · 2018~현재 · 색띠=위험구간 · 스파이크: 2018말·코로나(장중 ~10.9%)·2022 긴축 · 현재 ~2.7%(안정)</span>
+        <a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">실시간 정확값(FRED) →</a>
+      </div>
     </div>
 
     <div class="sig">
@@ -1170,6 +1173,49 @@
       var e = g(id); if (e) e.addEventListener('input', calcW);
     });
     if (g('wBal')) calcW();
+  })();
+
+  // ===== 하이일드 스프레드 주석 차트 =====
+  (function(){
+    var el = document.getElementById('hyChart');
+    if (!el) return;
+    var HY = [["2018-01",3.3],["2018-02",3.5],["2018-03",3.6],["2018-04",3.4],["2018-05",3.7],["2018-06",3.6],["2018-07",3.5],["2018-08",3.5],["2018-09",3.4],["2018-10",4.1],["2018-11",4.2],["2018-12",5.3],["2019-01",4.3],["2019-02",3.9],["2019-03",3.9],["2019-04",3.6],["2019-05",4.4],["2019-06",4],["2019-07",3.9],["2019-08",4.1],["2019-09",3.7],["2019-10",3.8],["2019-11",3.7],["2019-12",3.5],["2020-01",3.6],["2020-02",5],["2020-03",8.8],["2020-04",7.6],["2020-05",6.4],["2020-06",6.2],["2020-07",5.3],["2020-08",5.1],["2020-09",5.1],["2020-10",5],["2020-11",4.2],["2020-12",3.6],["2021-01",3.6],["2021-02",3.5],["2021-03",3.4],["2021-04",3.2],["2021-05",3.2],["2021-06",3.1],["2021-07",3.4],["2021-08",3],["2021-09",3.1],["2021-10",3.2],["2021-11",3.6],["2021-12",3.1],["2022-01",3.4],["2022-02",3.7],["2022-03",3.4],["2022-04",3.9],["2022-05",4.2],["2022-06",5.7],["2022-07",4.7],["2022-08",4.8],["2022-09",5.5],["2022-10",4.9],["2022-11",4.4],["2022-12",4.8],["2023-01",4.1],["2023-02",4.1],["2023-03",4.7],["2023-04",4.5],["2023-05",4.4],["2023-06",4.05],["2023-07",3.79],["2023-08",3.85],["2023-09",4.03],["2023-10",4.42],["2023-11",3.84],["2023-12",3.39],["2024-01",3.59],["2024-02",3.29],["2024-03",3.15],["2024-04",3.18],["2024-05",3.2],["2024-06",3.21],["2024-07",3.25],["2024-08",3.17],["2024-09",3.03],["2024-10",2.88],["2024-11",2.74],["2024-12",2.92],["2025-01",2.68],["2025-02",2.87],["2025-03",3.55],["2025-04",3.94],["2025-05",3.32],["2025-06",2.96],["2025-07",2.86],["2025-08",2.84],["2025-09",2.8],["2025-10",2.94],["2025-11",2.92],["2025-12",2.81],["2026-01",2.88],["2026-02",3.12],["2026-03",3.28],["2026-04",2.83],["2026-05",2.74],["2026-06",2.75]];
+    var W=1000, H=360, L=42, R=56, T=24, B=26;
+    var pw=W-L-R, ph=H-T-B, N=HY.length, YMAX=11;
+    function xp(i){ return L + i*(pw/(N-1)); }
+    function yp(v){ return T + (YMAX-v)/YMAX*ph; }
+    function idx(ym){ for(var i=0;i<N;i++) if(HY[i][0]===ym) return i; return -1; }
+    var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,sans-serif">';
+    // zone bands
+    function band(lo,hi,c){ var y=yp(hi); return '<rect x="'+L+'" y="'+y+'" width="'+pw+'" height="'+(yp(lo)-y)+'" fill="'+c+'"/>'; }
+    s+=band(0,4,'rgba(45,212,167,.08)')+band(4,6,'rgba(255,165,82,.10)')+band(6,YMAX,'rgba(255,107,107,.11)');
+    // y grid + labels
+    for(var v=0;v<=10;v+=2){ var y=yp(v); s+='<line x1="'+L+'" y1="'+y+'" x2="'+(L+pw)+'" y2="'+y+'" stroke="rgba(255,255,255,.06)"/>'; s+='<text x="'+(L-7)+'" y="'+(y+3.5)+'" fill="#9aa7c4" font-size="11" text-anchor="end">'+v+'</text>'; }
+    // threshold lines
+    function thr(v,label,col){ var y=yp(v); return '<line x1="'+L+'" y1="'+y+'" x2="'+(L+pw)+'" y2="'+y+'" stroke="'+col+'" stroke-width="1.2" stroke-dasharray="5 4"/><text x="'+(L+pw+5)+'" y="'+(y+3.5)+'" fill="'+col+'" font-size="10.5" font-weight="700">'+label+'</text>'; }
+    s+=thr(4,'4% 경계','#ffa552')+thr(6,'6% 위험','#ff6b6b');
+    // x year labels
+    for(var yr=2018;yr<=2026;yr++){ var i=idx(yr+'-01'); if(i<0)continue; s+='<text x="'+xp(i)+'" y="'+(H-8)+'" fill="#9aa7c4" font-size="10.5" text-anchor="middle">'+yr+'</text>'; }
+    // area + line
+    var d='',a='M '+xp(0)+' '+yp(0);
+    for(var k=0;k<N;k++){ d+=(k?' L ':'M ')+xp(k).toFixed(1)+' '+yp(HY[k][1]).toFixed(1); a+=' L '+xp(k).toFixed(1)+' '+yp(HY[k][1]).toFixed(1); }
+    a+=' L '+xp(N-1)+' '+yp(0)+' Z';
+    s+='<path d="'+a+'" fill="rgba(91,140,255,.10)"/>';
+    s+='<path d="'+d+'" fill="none" stroke="#5b8cff" stroke-width="2" stroke-linejoin="round"/>';
+    // crisis markers
+    function mark(ym,label,dy){ var i=idx(ym); if(i<0)return''; var x=xp(i),y=yp(HY[i][1]);
+      return '<line x1="'+x+'" y1="'+T+'" x2="'+x+'" y2="'+(T+ph)+'" stroke="rgba(255,255,255,.18)" stroke-dasharray="3 3"/>'+
+             '<circle cx="'+x+'" cy="'+y+'" r="3.2" fill="#ff6b6b"/>'+
+             '<text x="'+(x+5)+'" y="'+(y+dy)+'" fill="#ffd166" font-size="11" font-weight="700">'+label+'</text>'; }
+    s+=mark('2018-12','2018말',-7);
+    s+=mark('2020-03','코로나 ↑(장중 ~10.9%)',-7);
+    s+=mark('2022-06','2022 긴축',-7);
+    // current dot
+    var ci=N-1, cx=xp(ci), cy=yp(HY[ci][1]);
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="#2dd4a7"/>';
+    s+='<text x="'+(cx-8)+'" y="'+(cy+4)+'" fill="#2dd4a7" font-size="11.5" font-weight="800" text-anchor="end">현재 '+HY[ci][1]+'%</text>';
+    s+='</svg>';
+    el.innerHTML=s;
   })();
 </script>
 </body>
