@@ -1,8 +1,8 @@
 # 궁극의 노후 절세 마스터플랜 (2026 검증판)
 
-연금 · ISA · 미국주식 직투를 활용한 노후 절세 통합 전략을, **나이별 · 투자금 규모별 · 시간 흐름별** 액션으로 한눈에 정리한 GitHub Pages 사이트입니다.
+연금 · ISA · 미국주식 직투를 활용한 노후 절세 통합 전략을, **나이별 · 투자금 규모별 · 시간 흐름별** 액션으로 한눈에 정리한 사이트입니다. **Vercel**로 배포합니다(정적 사이트 + `/api` 서버리스 함수).
 
-🔗 **사이트:** `https://jungrok5.github.io/retire-tax-plan/` (Pages 활성화 후)
+🔗 **사이트:** `https://<프로젝트>.vercel.app` (Vercel 배포 후)
 
 ## 구성
 
@@ -31,9 +31,12 @@ open index.html        # macOS
 python3 -m http.server 8000   # http://localhost:8000
 ```
 
-## GitHub Pages 배포
+## 배포 (Vercel)
 
-`.github/workflows/deploy-pages.yml` 워크플로가 포함되어 있습니다.
-저장소 **Settings → Pages → Source** 를 **GitHub Actions** 로 설정하면 자동 배포됩니다.
+정적 사이트 + 서버리스 함수(`api/insider.js`)라 Vercel에 import 하면 한 번에 배포됩니다.
+**`main` 브랜치에 push하면 자동 재배포**됩니다. 자세한 단계와 내부자 라이브 차트용
+Finnhub 키 설정은 **[`VERCEL_SETUP.md`](./VERCEL_SETUP.md)** 참고.
+
+- 라이브 내부자 차트는 환경변수 `FINNHUB_KEY`가 설정돼야 작동합니다(키는 Vercel 서버에만 저장, 코드/깃 노출 X).
 
 > ⚠️ **면책:** 교육용 요약이며 투자·세무 자문이 아닙니다. 실행 전 세무사·금융 전문가와 본인 상황을 확인하세요.
