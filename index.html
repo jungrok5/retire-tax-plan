@@ -1046,6 +1046,24 @@
     </div>
 
     <div class="sig">
+      <h4>⚡ 공포지수 VIX — 단기 급락 실시간 경보</h4>
+      <p class="sub">하이일드·금·내부자가 '느린' 신호(며칠~몇 주)라면, <b>VIX(변동성지수)</b>는 <b>몇 시간~며칠</b> 단위로 가장 빨리 반응하는 '공포 게이지'입니다. 주가가 급락하면 VIX가 먼저/동시에 치솟습니다.</p>
+      <div class="vs"><span class="ok">~20 평온</span><span style="padding:5px 11px;border-radius:999px;background:rgba(255,165,82,.14);color:#ffa552;font-weight:700">20~30 경계</span><span class="bad">30+ 공포 · 40+ 패닉</span></div>
+      <div class="chart-box">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+          {"symbol":"TVC:VIX","interval":"D","timezone":"Asia/Seoul","theme":"dark","style":"1","locale":"kr","withdateranges":true,"hide_side_toolbar":true,"allow_symbol_change":false,"details":false,"width":"100%","height":360,"save_image":false,"backgroundColor":"#0e1424"}
+          </script>
+        </div>
+      </div>
+      <div class="chart-cap"><span>CBOE VIX 일봉 · TradingView 실시간 · 하단 <b style="color:var(--text)">기간 버튼</b></span><a href="https://www.tradingview.com/symbols/TVC-VIX/" target="_blank" rel="noopener">크게 보기 →</a></div>
+      <div class="note-box" style="margin-top:12px; font-size:13px; border-color:rgba(255,165,82,.4)">
+        💡 <b>더 빠른 신호:</b> <b>VIX 기간구조 역전</b>(VIX &gt; VIX3M = '당장의 공포'가 '3개월 공포'보다 큼)은 단기 패닉·바닥의 전형입니다. &nbsp;·&nbsp; ⚠️ 오늘 같은 <b>'네 마녀의 날'(쿼드러플 위칭, 3·6·9·12월 셋째 금요일)</b>은 선물·옵션 4종이 동시 만기 → 거래량·변동성이 <b>기계적으로 폭증</b>하는 '예정된' 날입니다. <b>방향이 아니라 진폭</b>을 키우니, 그날의 급변동은 과대해석 금물.
+      </div>
+    </div>
+
+    <div class="sig">
       <h4>3️⃣ 핵심 경영진(내부자) 대규모 매도</h4>
       <p class="sub">회사의 실제 ROI를 가장 잘 아는 창업자·CEO·대주주가 장밋빛 발표 뒤에서 지분을 대량 매도하면 '꼭지'의 전형적 신호입니다. 아래는 <b>시장 전체에서 지금 가장 크게 파는 내부자</b>를 금액순으로 보여줍니다. <span style="color:var(--muted)">Title이 <b style="color:var(--text)">CEO·CFO·Dir</b>이면 경영진 신호, <b style="color:var(--text)">10%</b>면 대주주·PE 청산(신호 강도가 다름) · SEC Form 4 기반.</span></p>
       <div class="vs"><span class="ok">정상 ▸ 매수(P)·자사주 매입 우세</span><span class="bad">위험 ▸ 경영진의 대규모 매도(S) 급증</span></div>
@@ -1300,7 +1318,7 @@
       else { color='#ff6b6b'; word='🔴 위험'; desc='신용 경색 진행 — 방어 점검'; }
       var dot=vd.querySelector('.dot'); if(dot) dot.style.background=color;
       var vt=vd.querySelector('.vt'); if(vt) vt.textContent='현재 종합 신호: '+word;
-      var vs=vd.querySelector('.vs2'); if(vs) vs.innerHTML='1순위 하이일드 스프레드 <b style="color:'+color+'">'+cur+'%</b> ('+desc+') · 금·내부자는 보조'+(live?' · <span style="color:'+color+'">최신값</span>':'');
+      var vs=vd.querySelector('.vs2'); if(vs) vs.innerHTML='1순위 하이일드 스프레드 <b style="color:'+color+'">'+cur+'%</b> ('+desc+') · 금·내부자 보조 · <b style="color:#ffa552">단기 급락은 VIX</b>'+(live?' · <span style="color:'+color+'">최신값</span>':'');
     }
     function render(HY, latest){
       var W=1000,H=360,L=42,R=56,T=24,B=26, pw=W-L-R, ph=H-T-B, N=HY.length, YMAX=11;
