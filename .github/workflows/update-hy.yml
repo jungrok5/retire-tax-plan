@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main          # 어느 브랜치에서 돌리든 항상 main을 갱신(라이브 = main)
 
       - name: Build hy-data.json (FRED API)
         env:
