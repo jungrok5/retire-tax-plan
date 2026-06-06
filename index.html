@@ -1349,7 +1349,9 @@
   (function(){
     var miChart=document.getElementById('miChart');
     if(!miChart) return;
-    var API_MI=(location.hostname.indexOf('github.io')>=0)?'':'/api/market-insider';
+    var STATIC_MI='/insider-data.json';            // GitHub가 매일 갱신(즉시 로드)
+    var FN_MI=(location.hostname.indexOf('github.io')>=0)?'':'/api/market-insider'; // 폴백
+    var miAll=null, miUpdated=null, curView='cluster-sells';
     var miStatus=document.getElementById('miStatus'), miSrc=document.getElementById('miSrc'), miSummary=document.getElementById('miSummary');
     var viewTabs=document.querySelectorAll('#miTabs .tab-btn[data-v]');
     var execBtn=document.getElementById('miExecOnly');
@@ -1383,18 +1385,25 @@
       }
       if(miSummary){ miSummary.innerHTML='<b style="color:#ff8c8c">경영진 '+nExec+'건('+miMoney(-sumExec).replace('−','')+')</b> · <b style="color:#9fb0cc">대주주·PE '+nMajor+'건</b>'+(execOnly?' · <span style="color:#ff8c8c">경영진만</span>':''); }
     }
-    function loadMI(view){
-      if(!API_MI){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">🔧 라이브는 Vercel 배포에서 표시됩니다.</div>'; return; }
+    function setSrc(view){ if(miSrc) miSrc.href = (view==='top-sales-week') ? 'http://openinsider.com/top-insider-sales-of-the-week' : 'http://openinsider.com/latest-cluster-sells'; }
+    function fnFetch(view){   // 폴백: Vercel 함수(정적 파일이 없을 때만)
+      if(!FN_MI){ miChart.innerHTML='<div style="padding:18px;text-align:center;color:#9aa7c4;font-size:13px">🔧 데이터 준비 중…</div>'; return; }
       miStatus.textContent='불러오는 중…';
-      fetch(API_MI+'?view='+view).then(function(r){return r.json();}).then(function(j){
+      fetch(FN_MI+'?view='+view).then(function(r){return r.json();}).then(function(j){
         lastRows=j.rows||[]; renderMI(lastRows);
-        miStatus.textContent = j.updated ? ('기준 '+fmtTime(j.updated)+(j.stale?' (이전)':'')) : '';
-        if(miSrc) miSrc.href = (view==='top-sales-week') ? 'http://openinsider.com/top-insider-sales-of-the-week' : 'http://openinsider.com/latest-cluster-sells';
+        miStatus.textContent = j.updated ? ('기준 '+fmtTime(j.updated)) : '';
+        setSrc(view);
       }).catch(function(){ miStatus.textContent=''; miChart.innerHTML='<div style="padding:18px;text-align:center;color:#ff6b6b;font-size:13px">불러오지 못했습니다.</div>'; });
     }
-    viewTabs.forEach(function(b){ b.addEventListener('click', function(){ viewTabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); loadMI(b.getAttribute('data-v')); }); });
+    function showView(view){  // 정적 데이터가 있으면 즉시 렌더(탭 전환도 즉시)
+      curView=view;
+      if(miAll && miAll[view]){ lastRows=miAll[view]; renderMI(lastRows); miStatus.textContent = miUpdated ? ('기준 '+fmtTime(miUpdated)) : ''; setSrc(view); }
+      else { fnFetch(view); }
+    }
+    viewTabs.forEach(function(b){ b.addEventListener('click', function(){ viewTabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); showView(b.getAttribute('data-v')); }); });
     if(execBtn){ execBtn.addEventListener('click', function(){ execOnly=!execOnly; execBtn.classList.toggle('active',execOnly); renderMI(lastRows); }); }
-    loadMI('cluster-sells');
+    // 초기: 정적 파일 우선, 실패 시 함수 폴백
+    fetch(STATIC_MI).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(j){ miAll=j; miUpdated=j.updated; showView(curView); }).catch(function(){ showView(curView); });
   })();
 
   // ===== 오늘 할 일 체크리스트 (클릭 토글 + 기억) =====

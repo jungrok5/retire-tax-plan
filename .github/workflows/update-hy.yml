@@ -1,12 +1,11 @@
-name: Update HY spread data
+name: Update market data
 
-# 하이일드 스프레드(FRED 공식 API)를 매일 받아 hy-data.json으로 커밋.
-# graph CSV는 봇 다운로드를 막으므로 공식 API 사용(키 필요, GitHub Secret에 보관 → 사용자 노출 X).
-# 사용자 요청 때마다 FRED를 치지 않으니 레이트리밋 0.
+# 매일 시장 데이터를 받아 정적 JSON으로 커밋 → 사이트는 정적 파일만 읽음(즉시 로드, 레이트리밋 0).
+#  1) 하이일드 스프레드: FRED 공식 API (FRED_API_KEY 시크릿 필요)
+#  2) 시장 전체 내부자 매도: OpenInsider (집중매도/이번주 최대매도)
 #
-# 준비: FRED 무료 키 발급 https://fred.stlouisfed.org/docs/api/api_key.html
-#       → 저장소 Settings → Secrets and variables → Actions → New secret
-#         name=FRED_API_KEY, value=발급키
+# FRED 키 발급: https://fred.stlouisfed.org/docs/api/api_key.html
+#   → Settings → Secrets and variables → Actions → New secret: FRED_API_KEY
 
 on:
   schedule:
@@ -17,7 +16,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-hy
+  group: update-data
   cancel-in-progress: true
 
 jobs:
@@ -26,24 +25,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch FRED API & build hy-data.json
+      - name: Build hy-data.json (FRED API)
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
           if [ -z "$FRED_API_KEY" ]; then
-            echo "::warning::FRED_API_KEY 시크릿이 없습니다 — 기존 hy-data.json 유지"; exit 0
+            echo "::warning::FRED_API_KEY 없음 — hy-data.json 유지"; exit 0
           fi
           curl --http1.1 -fsS -m 40 --retry 5 --retry-delay 4 --retry-all-errors \
             "https://api.stlouisfed.org/fred/series/observations?series_id=BAMLH0A0HYM2&api_key=${FRED_API_KEY}&file_type=json&observation_start=2018-01-01" \
-            -o hy.json || echo "::warning::FRED API fetch 실패"
+            -o hy.json || echo "::warning::FRED fetch 실패"
           python3 - <<'PY'
           import json, datetime, os, sys
-          if not os.path.exists('hy.json'):
-              print("no hy.json -> keep existing"); sys.exit(0)
-          try:
-              obs = json.load(open('hy.json')).get('observations', [])
-          except Exception as e:
-              print("parse fail -> keep:", e); sys.exit(0)
+          if not os.path.exists('hy.json'): print("no hy.json -> keep"); sys.exit(0)
+          try: obs=json.load(open('hy.json')).get('observations',[])
+          except Exception as e: print("parse fail -> keep:",e); sys.exit(0)
           month={}; latest=None
           for o in obs:
               d=o.get('date',''); v=o.get('value','.')
@@ -52,18 +48,70 @@ jobs:
               except: continue
               month[d[:7]]=val; latest={"date":d,"value":val}
           monthly=[[k,month[k]] for k in sorted(month)]
-          if len(monthly) < 6 or not latest:
-              print("empty -> keep existing"); sys.exit(0)
-          json.dump({"monthly":monthly,"latest":latest,"updated":datetime.datetime.utcnow().isoformat()+"Z"},
-                    open("hy-data.json","w"))
-          print("wrote", len(monthly), "months, latest", latest)
+          if len(monthly)<6 or not latest: print("empty -> keep"); sys.exit(0)
+          json.dump({"monthly":monthly,"latest":latest,"updated":datetime.datetime.utcnow().isoformat()+"Z"}, open("hy-data.json","w"))
+          print("hy: wrote", len(monthly), "months, latest", latest)
           PY
           rm -f hy.json
+
+      - name: Build insider-data.json (OpenInsider)
+        run: |
+          curl --http1.1 -fsS -m 40 --retry 4 --retry-delay 4 --retry-all-errors \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36" \
+            "http://openinsider.com/latest-cluster-sells" -o cs.html || echo "::warning::cluster fetch 실패"
+          curl --http1.1 -fsS -m 40 --retry 4 --retry-delay 4 --retry-all-errors \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36" \
+            "http://openinsider.com/top-insider-sales-of-the-week" -o tw.html || echo "::warning::top fetch 실패"
+          python3 - <<'PY'
+          import re, json, datetime, os, sys
+          def strip(s): return re.sub('<[^>]+>','',s).replace('&nbsp;',' ').replace('&amp;','&').strip()
+          def parse(path):
+              if not os.path.exists(path): return None
+              html=open(path,encoding='utf-8',errors='ignore').read()
+              m=re.search(r'<table[^>]*tinytable[^>]*>.*?</table>', html, re.S|re.I)
+              if not m: return None
+              t=m.group(0)
+              norm=[strip(x).lower() for x in re.findall(r'<th[^>]*>(.*?)</th>', t, re.S)]
+              def find(f):
+                  for i,h in enumerate(norm):
+                      if f(h): return i
+                  return -1
+              ci_co=find(lambda h:'company' in h); ci_ti=norm.index('title') if 'title' in norm else -1
+              ci_ty=find(lambda h:'trade type' in h); ci_va=norm.index('value') if 'value' in norm else -1
+              ci_da=find(lambda h:'trade date' in h)
+              rows=[]
+              for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', t, re.S):
+                  cells=[strip(c) for c in re.findall(r'<td[^>]*>(.*?)</td>', tr, re.S)]
+                  if len(cells)<10: continue
+                  tk=re.search(r'href="/([A-Z0-9.\-]{1,8})"', tr)
+                  if not tk: continue
+                  vnum=re.sub(r'[^0-9-]','', cells[ci_va] if ci_va>=0 else '')
+                  if not vnum or vnum=='-': continue
+                  title=cells[ci_ti] if ci_ti>=0 else ''
+                  cat='major' if '10%' in title else ('clevel' if re.search(r'\b(CEO|CFO|COO|CAO|CTO|CMO|Pres|President|Chief|Officer)\b',title,re.I) else 'dir')
+                  rows.append({"ticker":tk.group(1),"company":cells[ci_co] if ci_co>=0 else '',
+                               "title":title,"type":cells[ci_ty] if ci_ty>=0 else '',
+                               "value":int(vnum),"date":cells[ci_da] if ci_da>=0 else '',"cat":cat})
+              rows.sort(key=lambda r:abs(r["value"]), reverse=True)
+              return rows[:14]
+          cs=parse('cs.html'); tw=parse('tw.html')
+          if not cs and not tw: print("both empty -> keep"); sys.exit(0)
+          old={}
+          if os.path.exists('insider-data.json'):
+              try: old=json.load(open('insider-data.json'))
+              except: old={}
+          out={"cluster-sells": cs if cs else old.get("cluster-sells",[]),
+               "top-sales-week": tw if tw else old.get("top-sales-week",[]),
+               "updated": datetime.datetime.utcnow().isoformat()+"Z"}
+          json.dump(out, open("insider-data.json","w"))
+          print("insider: cluster", len(out["cluster-sells"]), "top", len(out["top-sales-week"]))
+          PY
+          rm -f cs.html tw.html
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hy-data.json
-          git diff --staged --quiet || git commit -m "chore: update HY spread data [skip ci]"
+          git add hy-data.json insider-data.json
+          git diff --staged --quiet || git commit -m "chore: update market data [skip ci]"
           git push
