@@ -1048,18 +1048,11 @@
     </div>
 
     <div class="sig">
-      <h4>⚡ 공포지수 VIX — 단기 급락 실시간 경보</h4>
-      <p class="sub">하이일드·금·내부자가 '느린' 신호(며칠~몇 주)라면, <b>VIX(변동성지수)</b>는 <b>몇 시간~며칠</b> 단위로 가장 빨리 반응하는 '공포 게이지'입니다. 주가가 급락하면 VIX가 먼저/동시에 치솟습니다.</p>
-      <div class="vs"><span class="ok">~20 평온</span><span style="padding:5px 11px;border-radius:999px;background:rgba(255,165,82,.14);color:#ffa552;font-weight:700">20~30 경계</span><span class="bad">30+ 공포 · 40+ 패닉</span></div>
-      <div class="chart-box">
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-          {"symbol":"TVC:VIX","interval":"D","timezone":"Asia/Seoul","theme":"dark","style":"1","locale":"kr","withdateranges":true,"hide_side_toolbar":true,"allow_symbol_change":false,"details":false,"width":"100%","height":360,"save_image":false,"backgroundColor":"#0e1424"}
-          </script>
-        </div>
-      </div>
-      <div class="chart-cap"><span>CBOE VIX 일봉 · TradingView 실시간 · 하단 <b style="color:var(--text)">기간 버튼</b></span><a href="https://www.tradingview.com/symbols/TVC-VIX/" target="_blank" rel="noopener">크게 보기 →</a></div>
+      <h4>⚡ 공포지수 VIX — 단기 급락 경보</h4>
+      <p class="sub">하이일드·금·내부자가 '느린' 신호(며칠~몇 주)라면, <b>VIX(변동성지수)</b>는 가장 빨리 반응하는 '공포 게이지'입니다. 주가가 급락하면 VIX가 먼저/동시에 치솟습니다. (CBOE VIX 종가 · 매일 자동)</p>
+      <div class="vs"><span class="ok">~20 평온</span><span style="padding:5px 11px;border-radius:999px;background:rgba(255,165,82,.14);color:#ffa552;font-weight:700">20~30 경계</span><span style="padding:5px 11px;border-radius:999px;background:rgba(255,140,82,.16);color:#ff8c52;font-weight:700">30~40 공포</span><span class="bad">40+ 패닉</span></div>
+      <div class="chart-box" style="padding:10px 8px 4px;"><div id="vixChart"></div></div>
+      <div class="chart-cap"><span id="vixCap">CBOE VIX(FRED VIXCLS) · 색띠=공포 구간</span><a href="https://fred.stlouisfed.org/series/VIXCLS" target="_blank" rel="noopener">FRED 원본 →</a></div>
       <div class="note-box" style="margin-top:12px; font-size:13px; border-color:rgba(255,165,82,.4)">
         💡 <b>더 빠른 신호:</b> <b>VIX 기간구조 역전</b>(VIX &gt; VIX3M = '당장의 공포'가 '3개월 공포'보다 큼)은 단기 패닉·바닥의 전형입니다. &nbsp;·&nbsp; ⚠️ 오늘 같은 <b>'네 마녀의 날'(쿼드러플 위칭, 3·6·9·12월 셋째 금요일)</b>은 선물·옵션 4종이 동시 만기 → 거래량·변동성이 <b>기계적으로 폭증</b>하는 '예정된' 날입니다. <b>방향이 아니라 진폭</b>을 키우니, 그날의 급변동은 과대해석 금물.
       </div>
@@ -1424,6 +1417,41 @@
     if(execBtn){ execBtn.addEventListener('click', function(){ execOnly=!execOnly; execBtn.classList.toggle('active',execOnly); renderMI(lastRows); }); }
     // 초기: 정적 파일 우선, 실패 시 함수 폴백
     fetch(STATIC_MI).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(j){ miAll=j; miUpdated=j.updated; showView(curView); }).catch(function(){ showView(curView); });
+  })();
+
+  // ===== VIX 공포지수 차트 (FRED VIXCLS, 정적 파일) =====
+  (function(){
+    var el=document.getElementById('vixChart'); if(!el) return;
+    var cap=document.getElementById('vixCap');
+    el.innerHTML='<div style="padding:22px;text-align:center;color:#9aa7c4;font-size:13px">VIX 데이터 불러오는 중…</div>';
+    fetch('/vix-data.json').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(j){
+      var d=(j.daily||[]); if(!d.length){ throw 0; }
+      var W=1000,H=300,L=34,R=46,T=16,B=22, pw=W-L-R, ph=H-T-B, N=d.length;
+      var peak=Math.max.apply(null,d.map(function(x){return x[1];}));
+      var YMAX=Math.max(45, Math.ceil(peak/10)*10);
+      function xp(i){ return L+i*(pw/(N-1)); }
+      function yp(v){ return T+(1-v/YMAX)*ph; }
+      function band(lo,hi,c){ var y=yp(hi); return '<rect x="'+L+'" y="'+y+'" width="'+pw+'" height="'+(yp(lo)-y)+'" fill="'+c+'"/>'; }
+      var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" font-family="Pretendard,sans-serif">';
+      s+=band(0,20,'rgba(45,212,167,.08)')+band(20,30,'rgba(255,209,102,.10)')+band(30,40,'rgba(255,140,82,.12)')+band(40,YMAX,'rgba(255,107,107,.13)');
+      [20,30,40].forEach(function(t){ if(t>=YMAX) return; var y=yp(t); var col=t<30?'#ffd166':(t<40?'#ff8c52':'#ff6b6b');
+        s+='<line x1="'+L+'" y1="'+y+'" x2="'+(L+pw)+'" y2="'+y+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="5 4"/><text x="'+(L+pw+4)+'" y="'+(y+3.5)+'" fill="'+col+'" font-size="10.5" font-weight="700">'+t+'</text>'; });
+      // 연-월 라벨(월초)
+      var lastM='';
+      for(var i=0;i<N;i++){ var ym=d[i][0].slice(0,7); if(ym!==lastM){ lastM=ym; if(d[i][0].slice(8)<='07'){ s+='<text x="'+xp(i)+'" y="'+(H-7)+'" fill="#9aa7c4" font-size="9.5" text-anchor="middle">'+d[i][0].slice(2,7)+'</text>'; } } }
+      var path='';
+      for(var k=0;k<N;k++){ path+=(k?' L ':'M ')+xp(k).toFixed(1)+' '+yp(d[k][1]).toFixed(1); }
+      s+='<path d="'+path+'" fill="none" stroke="#5b8cff" stroke-width="1.7" stroke-linejoin="round"/>';
+      var lv=d[N-1][1], lc=(lv<20?'#2dd4a7':lv<30?'#ffd166':lv<40?'#ff8c52':'#ff6b6b');
+      s+='<circle cx="'+xp(N-1)+'" cy="'+yp(lv)+'" r="4" fill="'+lc+'"/>';
+      s+='<text x="'+(xp(N-1)-8)+'" y="'+(yp(lv)-7)+'" fill="'+lc+'" font-size="12.5" font-weight="800" text-anchor="end">현재 '+lv.toFixed(1)+'</text>';
+      s+='</svg>';
+      el.innerHTML=s;
+      var zone=(lv<20?'🟢 평온':lv<30?'🟡 경계':lv<40?'🟠 공포':'🔴 패닉');
+      if(cap) cap.innerHTML='CBOE VIX '+(j.latest?('<b style="color:'+lc+'">'+lv.toFixed(2)+' '+zone+'</b> ('+j.latest.date+')'):'')+' · 매일 자동';
+    }).catch(function(){
+      el.innerHTML='<div style="padding:22px;text-align:center;color:#9aa7c4;font-size:13px">🔧 VIX 데이터는 다음 자동 갱신(매일 22시) 후 표시됩니다.<br><a href="https://www.cnn.com/markets/fear-and-greed" target="_blank" rel="noopener" style="color:#9cb8ff">지금 공포지수 보기 →</a></div>';
+    });
   })();
 
   // ===== 오늘 할 일 체크리스트 (클릭 토글 + 기억) =====
