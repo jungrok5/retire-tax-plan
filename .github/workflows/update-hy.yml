@@ -110,10 +110,37 @@ jobs:
           PY
           rm -f cs.html tw.html
 
+      - name: Build vix-data.json (FRED API VIXCLS)
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          if [ -z "$FRED_API_KEY" ]; then echo "::warning::FRED_API_KEY 없음 — vix-data.json 유지"; exit 0; fi
+          START=$(date -u -d '14 months ago' +%F)
+          curl --http1.1 -fsS -m 40 --retry 5 --retry-delay 4 --retry-all-errors \
+            "https://api.stlouisfed.org/fred/series/observations?series_id=VIXCLS&api_key=${FRED_API_KEY}&file_type=json&observation_start=${START}" \
+            -o vix.json || echo "::warning::VIX fetch 실패"
+          python3 - <<'PY'
+          import json, datetime, os, sys
+          if not os.path.exists('vix.json'): print("no vix.json -> keep"); sys.exit(0)
+          try: obs=json.load(open('vix.json')).get('observations',[])
+          except Exception as e: print("parse fail -> keep:",e); sys.exit(0)
+          daily=[]; latest=None
+          for o in obs:
+              d=o.get('date',''); v=o.get('value','.')
+              if not d or v in ('.','',None): continue
+              try: val=float(v)
+              except: continue
+              daily.append([d,val]); latest={"date":d,"value":val}
+          if len(daily)<10 or not latest: print("empty -> keep"); sys.exit(0)
+          json.dump({"daily":daily,"latest":latest,"updated":datetime.datetime.utcnow().isoformat()+"Z"}, open("vix-data.json","w"))
+          print("vix: wrote", len(daily), "days, latest", latest)
+          PY
+          rm -f vix.json
+
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hy-data.json insider-data.json
+          git add hy-data.json insider-data.json vix-data.json
           git diff --staged --quiet || git commit -m "chore: update market data [skip ci]"
           git push
