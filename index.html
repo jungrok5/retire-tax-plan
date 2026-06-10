@@ -756,6 +756,8 @@
   </div>
 </section>
 
+<div class="wrap" style="padding:6px 0 2px;"><div class="adslot"><div class="lbl">Advertisement</div><div class="coupang-slot"></div></div></div>
+
 <div class="phase"><div class="wrap"><span class="pe">🔭</span><div><h2 class="pt">관점별로 보기 <small>· 나이·투자금·시간</small></h2><p class="ps">같은 전략을 내 상황의 축으로 다시 본다.</p></div></div></div>
 
 <section id="byage">
@@ -992,6 +994,8 @@
   </div>
 </section>
 
+<div class="wrap" style="padding:6px 0 2px;"><div class="adslot"><div class="lbl">Advertisement</div><div class="coupang-slot"></div></div></div>
+
 <div class="phase"><div class="wrap"><span class="pe">🛡️</span><div><h2 class="pt">지키기 <small>· 방어</small></h2><p class="ps">버블·하락장 신호와 방어 리밸런싱.</p></div></div></div>
 
 <section id="bubble">
@@ -1165,35 +1169,31 @@
   </div>
 </section>
 
-<!-- AD · Coupang Partners -->
+<!-- AD · Coupang Partners (하단) -->
 <section id="ad" style="padding:28px 0;">
-  <div class="wrap">
-    <div class="adslot">
-      <div class="lbl">Advertisement</div>
-      <div id="coupangAd"><div class="ph">🔧 쿠팡파트너스 배너 연결 후 표시됩니다<br><span style="font-size:12px">(배너 id · trackingCode 입력 필요)</span></div></div>
-      <div class="disc">이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
-    </div>
-  </div>
+  <div class="wrap"><div class="adslot"><div class="lbl">Advertisement</div><div class="coupang-slot"></div></div></div>
 </section>
 <script>
-  // ===== 쿠팡파트너스 배너 (rps-online과 동일 계정/방식) =====
-  // g.js를 격리 iframe(srcdoc) 안에서 렌더 → 정확히 이 자리에 고정(레이아웃 깨짐 방지)
+  // ===== 쿠팡파트너스 배너 (rps-online 동일 계정, 여러 슬롯 지원) =====
   (function(){
     var C = { id: 995864, trackingCode: "AF9050118", subId: "retiretax", template: "carousel", width: 360, height: 140 };
-    var el = document.getElementById('coupangAd');
-    if (!el || !C.id || !C.trackingCode) return;
+    if (!C.id || !C.trackingCode) return;
     var opts = JSON.stringify({ id: C.id, template: C.template, trackingCode: C.trackingCode,
       subId: C.subId || null, width: String(C.width), height: String(C.height), tsource: "" });
     var doc = '<!doctype html><html><head><meta charset="utf-8">' +
       '<style>html,body{margin:0;padding:0;overflow:hidden}</style></head><body>' +
       '<script src="https://ads-partners.coupang.com/g.js"><\/script>' +
       '<script>new PartnersCoupang.G(' + opts + ');<\/script></body></html>';
-    var f = document.createElement('iframe');
-    f.title = '쿠팡 파트너스 광고';
-    f.setAttribute('scrolling','no'); f.setAttribute('frameborder','0');
-    f.style.cssText = 'display:block;border:0;width:'+C.width+'px;max-width:100%;height:'+C.height+'px;margin:0 auto;';
-    f.srcdoc = doc;
-    el.innerHTML = ''; el.appendChild(f);
+    var disc = '이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.';
+    document.querySelectorAll('.coupang-slot').forEach(function(el){
+      if (el.dataset.mounted) return; el.dataset.mounted = '1';
+      var f = document.createElement('iframe');
+      f.title = '쿠팡 파트너스 광고';
+      f.setAttribute('scrolling','no'); f.setAttribute('frameborder','0');
+      f.style.cssText = 'display:block;border:0;width:'+C.width+'px;max-width:100%;height:'+C.height+'px;margin:0 auto;';
+      f.srcdoc = doc; el.appendChild(f);
+      var p = document.createElement('div'); p.className = 'disc'; p.textContent = disc; el.appendChild(p);
+    });
   })();
 </script>
 
