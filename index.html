@@ -301,6 +301,12 @@
   /* footer */
   footer { border-top:1px solid var(--line); padding:34px 0 60px; color:var(--muted); font-size:13.5px; }
   .disclaim { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13.5px; color:var(--muted); }
+  /* AD SLOT (Coupang Partners) */
+  .adslot { display:flex; flex-direction:column; align-items:center; }
+  .adslot .lbl { font-size:11px; color:var(--muted); letter-spacing:1px; margin-bottom:10px; text-transform:uppercase; }
+  .adslot .ph { background:var(--card); border:1px dashed var(--line); border-radius:14px; padding:24px 20px; text-align:center; color:var(--muted); font-size:13px; max-width:680px; width:100%; }
+  .adslot iframe { max-width:100%; border:0; border-radius:12px; }
+  .adslot .disc { font-size:11.5px; color:var(--muted); text-align:center; margin-top:10px; max-width:680px; }
   .consult { display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:linear-gradient(100deg, rgba(91,140,255,.14), rgba(124,92,255,.10)); border:1px solid rgba(124,92,255,.4); border-radius:16px; padding:18px 20px; margin-bottom:18px; }
   .consult .ct { flex:1; min-width:200px; }
   .consult .ct b { color:var(--text); font-size:16px; }
@@ -1158,6 +1164,32 @@
     <details class="acc"><summary>부부가 아니어도 되나요?</summary><div class="body">물론입니다. 1인 기준으로 그대로 적용하면 됩니다(연금 900·ISA 2,000). <b>부부</b>면 인별 과세라 한도·방어막이 <b>2배</b>로 커지는 것뿐입니다. 배분계산기에서 1인/부부를 바꿔 비교해 보세요.</div></details>
   </div>
 </section>
+
+<!-- AD · Coupang Partners -->
+<section id="ad" style="padding:28px 0;">
+  <div class="wrap">
+    <div class="adslot">
+      <div class="lbl">Advertisement</div>
+      <div id="coupangAd"><div class="ph">🔧 쿠팡파트너스 배너 연결 후 표시됩니다<br><span style="font-size:12px">(배너 id · trackingCode 입력 필요)</span></div></div>
+      <div class="disc">이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
+    </div>
+  </div>
+</section>
+<script>
+  // ===== 쿠팡파트너스 배너 =====
+  // ▼ 쿠팡파트너스 → '배너 만들기'에서 발급한 값을 넣으세요. (그 전엔 안내문만 표시)
+  (function(){
+    var COUPANG = { id: 0, trackingCode: "", template: "carousel", width: 680, height: 140 };
+    var el = document.getElementById('coupangAd');
+    if (!el || !COUPANG.id || !COUPANG.trackingCode) return;   // 미설정이면 안내문 유지
+    var src = "https://ads-partners.coupang.com/widgets.html?id=" + COUPANG.id
+      + "&template=" + encodeURIComponent(COUPANG.template)
+      + "&trackingCode=" + encodeURIComponent(COUPANG.trackingCode)
+      + "&subId=&width=" + COUPANG.width + "&height=" + COUPANG.height + "&tsource=";
+    el.innerHTML = '<iframe src="' + src + '" width="' + COUPANG.width + '" height="' + COUPANG.height
+      + '" frameborder="0" scrolling="no" referrerpolicy="unsafe-url"></iframe>';
+  })();
+</script>
 
 <footer>
   <div class="wrap">
