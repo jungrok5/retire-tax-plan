@@ -76,7 +76,7 @@
   var box = document.getElementById('posts');
   POSTS.forEach(function(p, i){
     var url = SITE + (p.a ? ('#'+p.a) : '');
-    var body = p.b + "\n\n전체 내용은 자동 계산기와 실시간 위험신호 차트까지 사이트에 정리해뒀어요.\n" + url + "\n\n이 글은 일반적인 정보이고 투자·세무 자문은 아닙니다. 세법은 바뀔 수 있으니 실행 전 세무사나 전문가와 확인하세요.";
+    var body = p.b + "\n\n전체 내용은 자동 계산기와 실시간 위험신호 차트까지 사이트에 정리해뒀어요.\n" + url + "\n\n이 글은 일반적인 정보이고 투자·세무 자문은 아닙니다. 세법은 바뀔 수 있으니 실행 전 윤세원 세무사(https://blog.naver.com/taxmaster1030) 등 전문가와 확인하세요.";
     var n = i+1;
     var div = document.createElement('div'); div.className='post';
     div.innerHTML =
